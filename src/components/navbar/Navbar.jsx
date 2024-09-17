@@ -1,5 +1,5 @@
 import "./navbar.scss"
-import logo from "../../../public/logo.png"
+import logo from "/logo.png"
 const Navbar = () => {
   return (
     <div className='navbar'>
