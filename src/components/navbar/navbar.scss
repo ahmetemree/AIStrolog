@@ -18,13 +18,52 @@
     }
 
     .options{
+        margin-left: 100px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 20px;
+        a{
+            text-decoration: none; // Remove underline from the link itself
 
-        span{
-            color: rgb(182, 180, 180);
+            span{
+                color: #121118;
+                padding: 10px;
+                border-radius: 5px; 
+                cursor: pointer;
+                transition: all 0.5s ease;
+                background-image: linear-gradient(to right, #E5D9F2, #A594F9);
+                background-size: 0 100%;
+                background-repeat: no-repeat;
+                
+                &:hover {
+                    scale: 1.10;
+                    background-size: 100% 100%;
+                    background-image: linear-gradient(to right, #E5D9F2, #A594F9);
+                }
+            }
+        }
+    }
+        
+    .auth{
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        button{
+            background-color: #A594F9;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            &:hover {
+                scale: 1.10;
+                
+            }
         }
     }
 }
