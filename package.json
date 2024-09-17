@@ -24,6 +24,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.9.0",
+    "@clerk/themes": "^2.1.30",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "prop-types": "^15.8.1",
