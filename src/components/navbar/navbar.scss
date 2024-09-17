@@ -28,9 +28,9 @@
                 
                 span{
                     color: #121118;
-                    font-family: "Crafty Girls", cursive;
-                    font-weight: 1000;
-                    font-style: normal;
+                    // font-family: "Crafty Girls", cursive;
+                    // font-weight: 1000;
+                    // font-style: normal;
                     font-size: 25px;
                 }
             }
@@ -89,20 +89,31 @@
         a{
             text-decoration: none; // Remove underline from the link itself
 
-            span{
+            span {
                 color: #121118;
                 padding: 10px;
-                border-radius: 5px; 
+                border-radius: 5px;
                 cursor: pointer;
+                position: relative;
                 transition: all 0.5s ease;
-                background-image: linear-gradient(to right, #E5D9F2, #A594F9);
-                background-size: 0 100%;
-                background-repeat: no-repeat;
+                
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: 0;
+                    left: 0;
+                    background-image: linear-gradient(to right, #E5D9F2, #A594F9);
+                    transition: width 0.5s ease;
+                }
                 
                 &:hover {
                     scale: 1.10;
-                    background-size: 100% 100%;
-                    background-image: linear-gradient(to right, #E5D9F2, #A594F9);
+                    
+                    &::after {
+                        width: 100%;
+                    }
                 }
             }
         }
