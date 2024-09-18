@@ -74,10 +74,11 @@
                 background: linear-gradient(45deg, #A594F9, #8A7CF8);
                 border: none;
                 padding: 20px;
-                border-radius: 20px;
+                border-radius: 50px;
                 transition: all 0.3s ease;
                 cursor: pointer;
                 color: white;
+                
                 &::before {
                     content: '';
                     position: absolute;
