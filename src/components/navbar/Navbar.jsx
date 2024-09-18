@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './navbar.scss';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,10 +22,13 @@ const Navbar = () => {
 
   return (
     <>
-      <div className={`overlay ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}></div>
+      <div
+        className={`overlay ${isMenuOpen ? 'active' : ''}`}
+        onClick={toggleMenu}
+      ></div>
       <nav className="navbar">
         <div className="hamburger-menu" onClick={toggleMenu}>
-         <img src="/hamburger.png" alt="" />
+          <img src="/hamburger.png" alt="" />
         </div>
         <div className="logo">
           <a href="/">
@@ -62,10 +66,14 @@ const Navbar = () => {
         </div>
         <div className="auth">
           <a href="/login">
-            <button>LogIn</button>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
           </a>
           <a href="/signup">
-            <button>SignUp</button>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </a>
         </div>
       </nav>
