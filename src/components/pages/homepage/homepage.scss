@@ -1,8 +1,123 @@
 .homepage{
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    .imgcontainer{
+        display: flex;
+        align-items: center;
+        justify-content:first baseline;
+        gap: 100px;
+        @media screen and (max-width: 615px) {
+            flex-direction: column;
+            gap: 0;
+        }
+        .leftimage{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            @media screen and (max-width: 615px) {
+                flex-direction: row;
+            }
+            .astrolog{
+                img{
+                    width: 200px;
+                    opacity: 50%;
+                    border-radius: 20px;
+                    animation: sway 4s ease-in-out infinite; // Yeni eklenen satır
+                    @media screen and (max-width: 615px) {
+                        width: 100px;
+                    }
+                }
+            }
 
-    span{
-        background-color: transparent;
+            .astrology{
+                img{
+                    width: 200px;
+                    opacity: 50%;
+                    border-radius: 20px;
+                    animation: rotate 20s linear infinite; // Yeni eklenen satır
+                    @media screen and (max-width: 615px) {
+                        width: 100px;
+                    }
+                }
+            }
+                
+        }
+        .righttext{
+            display: flex;
+            flex-direction: column;
+            flex: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 100px;
+            h1{
+                text-align: center;
+                color: #8A7CF8;
+            }
+            h3{
+                text-align: center;
+                color: #5d4dd6;
+            }
+
+            button {
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(45deg, #A594F9, #8A7CF8);
+                border: none;
+                padding: 20px;
+                border-radius: 20px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                color: white;
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(
+                        120deg,
+                        transparent,
+                        rgba(255, 255, 255, 0.4),
+                        transparent
+                    );
+                    transition: all 0.5s;
+                }
+
+                &:hover {
+                    transform: scale(1.1);
+                    
+                    &::before {
+                        left: 100%;
+                    }
+                }
+            }
+        }
     }
+}
+
+// Dosyanın sonuna ekleyin
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Dosyanın sonuna ekleyin
+@keyframes sway {
+    0%, 100% { transform: rotate(-7.5deg); }
+    50% { transform: rotate(7.5deg); }
 }
