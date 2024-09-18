@@ -6,7 +6,6 @@ const Navbar = () => {
         <a href="/">
           <img src="/logo.png" alt="" />
           <div className="text">
-
           <span>AIStrolog</span>
           </div>
         </a>
