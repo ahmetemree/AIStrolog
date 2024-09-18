@@ -16,7 +16,7 @@ export function HomePage() {
         <div className="righttext">
           <h1>Senin için hazırlanmış Yapay zeka destekli analiz yapan bir burç asistanı</h1>
           <h3>Hadi hemen sen de doğum tarihini girerek burç analizlerini öğren!</h3>
-          <button>Haydi Başlayalım!</button>
+          <a href="/dashboard"><button>Haydi Başlayalım!</button></a>
         </div>
       </div>
     </div>
