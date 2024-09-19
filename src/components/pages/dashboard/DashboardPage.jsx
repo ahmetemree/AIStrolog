@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Loader } from '@mantine/core';
 import { BarChart } from '@mantine/charts';
 import AiPreview from '../../aipreview/AiPreview';
+import { motion } from 'framer-motion';
 
 export const data = [
   { month: 'January', Smartphones: 1200, Laptops: 900, Tablets: 200 },
@@ -35,17 +36,59 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboardpage">
-      <h1>Hoşgeldin {user?.fullName}</h1>
+      <div className="intro">
+
+      <motion.h1
+        initial={{ opacity: 0, x: -250 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.0 }}
+      >
+        {/* Hoşgeldin {user?.fullName} */}
+      </motion.h1>
+      <motion.h1
+        initial={{ opacity: 0, x: -250 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.0 }}
+        >
+        {/* Burcunuz: Balık */}
+      </motion.h1>
+        </div>
       <div className="analysis">
         <div className="natalchart">
-          <img src="./natal.png" alt="" />
+        <motion.h1
+        initial={{ opacity: 0, x: -250 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.0 }}
+      >
+        Hoşgeldin <br/>{user?.fullName}
+      </motion.h1>
+          <motion.img
+            src="./natal.png"
+            alt=""
+            initial={{ opacity: 0, x: -50 ,scale:0.85}}
+            whileInView={{ opacity: 0.5, x: 0 ,scale:1}}
+            transition={{ duration: 1.0 }}
+            
+          />
         </div>
-        <div className="aimessage">
+        <motion.div
+          className="aimessage"
+          initial={{ opacity: 0, x: -150 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.0 }}
+        >
+          <motion.h1
+        initial={{ opacity: 0, x: -250 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.0 }}
+        >
+        Burcunuz: Balık
+      </motion.h1>
           <div className="aitext">
             <img src="./ai.png" alt="" />
             <h3>
-              Umarım güzel bir gün geçiriyorsundur
-              :) İşte senin için bazı önerilerim:
+              Umarım güzel bir gün geçiriyorsundur :) İşte senin için bazı
+              önerilerim:
             </h3>
           </div>
           <span>Yapay zeka ile son sohbetine git:</span>
@@ -57,7 +100,7 @@ const DashboardPage = () => {
               Yeni Mesaj Oluştur
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
       <div className="userfeedback"></div>
     </div>
