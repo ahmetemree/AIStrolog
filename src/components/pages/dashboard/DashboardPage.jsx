@@ -6,6 +6,7 @@ import { Loader } from '@mantine/core';
 import { BarChart } from '@mantine/charts';
 import AiPreview from '../../aipreview/AiPreview';
 import { motion } from 'framer-motion';
+import { useMyContext } from '../../../context/Context';
 
 export const data = [
   { month: 'January', Smartphones: 1200, Laptops: 900, Tablets: 200 },
@@ -17,6 +18,8 @@ export const data = [
 ];
 
 const DashboardPage = () => {
+  const { eSelected, setESelected } = useMyContext();
+
   const { user } = useUser();
   console.log(user);
   const { userId, isLoaded } = useAuth();
@@ -37,38 +40,48 @@ const DashboardPage = () => {
   return (
     <div className="dashboardpage">
       <div className="intro">
-
-      <motion.h1
-        initial={{ opacity: 0, x: -250 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.0 }}
-      >
-        {/* Hoşgeldin {user?.fullName} */}
-      </motion.h1>
-      <motion.h1
-        initial={{ opacity: 0, x: -250 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.0 }}
+        <motion.h1
+          initial={{ opacity: 0, x: -250 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.0 }}
         >
-        {/* Burcunuz: Balık */}
-      </motion.h1>
-        </div>
+          {/* Hoşgeldin {user?.fullName} */}
+        </motion.h1>
+        <motion.h1
+          initial={{ opacity: 0, x: -250 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.0 }}
+        >
+          {/* Burcunuz: Balık */}
+        </motion.h1>
+      </div>
       <div className="analysis">
         <div className="natalchart">
-        <motion.h1
-        initial={{ opacity: 0, x: -250 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.0 }}
-      >
-        Hoşgeldin <br/>{user?.fullName}
-      </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, x: -250 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.0 }}
+            className='welcome'
+          >
+            {eSelected ? (
+              <>
+                Welcome <br /> {user?.fullName}
+              </>
+            ) : (
+              <>
+                Hoşgeldin <br /> {user?.fullName}
+              </>
+            )}
+          </motion.h1>
           <motion.img
             src="./natal.png"
             alt=""
-            initial={{ opacity: 0, x: -50 ,scale:0.85}}
-            whileInView={{ opacity: 0.5, x: 0 ,scale:1}}
+            initial={{ opacity: 0, x: -50, scale: 0.85 }}
+            whileInView={{ opacity: 0.5, x: 0, scale: 1 }}
             transition={{ duration: 1.0 }}
-            
+            animate={{
+              rotate: [-20, 20]
+            }}
           />
         </div>
         <motion.div
@@ -78,16 +91,16 @@ const DashboardPage = () => {
           transition={{ duration: 1.0 }}
         >
           <motion.h1
-        initial={{ opacity: 0, x: -250 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.0 }}
-        >
-        Burcunuz: Balık
-      </motion.h1>
+            initial={{ opacity: 0, x: -250 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.0 }}
+          >
+            Burcunuz: Balık
+          </motion.h1>
           <div className="aitext">
             <img src="./ai.png" alt="" />
             <h3>
-              Umarım güzel bir gün geçiriyorsundur :) İşte senin için bazı
+              Umarım güzel bir gün geçiriyorsundur. İşte senin için bazı
               önerilerim:
             </h3>
           </div>

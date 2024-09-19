@@ -17,6 +17,11 @@ const AiPreview = () => {
       <div className="messageaiwrapper">
         <h6 className="messageai">Şu anda seni bekliyor! </h6>
       </div>
+      <div className="messagewrapper">
+        <button>Go To The Latest Chat</button>
+        <img src="/arrow.png" alt="" />
+      </div>
+      
     </div>
   );
 };
