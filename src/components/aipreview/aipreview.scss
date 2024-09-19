@@ -44,18 +44,18 @@
         justify-content: center;
         button{
             background-color: transparent;
-            font-size: 12px;
+            font-size: 16px;
             border: none;
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            color: white;
+            color: rgb(174, 151, 221);
         }
 
         img{
             width: 15px;
             height: 15px;
-            filter: brightness(0) invert(1);
+            filter: brightness(0) invert(0.7);
             cursor: pointer;
         }
         @media screen and (max-width: 615px) {
