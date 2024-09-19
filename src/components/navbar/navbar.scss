@@ -124,6 +124,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        // flex-direction: column;
+        margin-top: 5px;
+        gap: 20px;
         
         button{
             background-color: #A594F9;
@@ -138,6 +141,35 @@
                 scale: 1.10;
                 background-color: #9581f7;
 
+            }
+        }
+
+        .languages{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            
+            img {
+                width: 20px;
+                height: 20px;
+                box-sizing: content-box; // Eklenen satır
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                padding: 5px;
+                border: 2px solid transparent;
+            }
+
+            .selected{
+                background-color: #A594F9;
+                border-color: #A594F9;
+                transform: scale(1.1);
+            }
+
+            img:not(.selected):hover {
+                background-color: rgba(165, 148, 249, 0.2);
+                transform: scale(1.05);
             }
         }
     }

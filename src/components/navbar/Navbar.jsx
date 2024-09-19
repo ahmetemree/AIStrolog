@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './navbar.scss';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { useMyContext } from '../../context/Context';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { eSelected, setESelected } = useMyContext();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -42,29 +43,45 @@ const Navbar = () => {
           <div className="home">
             <img src="/home.png" alt="Home" />
             <a href="/" onClick={toggleMenu}>
-              <span>Home</span>
+              <span>{eSelected ? "Home" : "Anasayfa"}</span>
             </a>
           </div>
           <div className="dashboard">
             <img src="/dashboard.png" alt="Dashboard" />
             <a href="/dashboard" onClick={toggleMenu}>
-              <span>Dashboard</span>
+              <span>{eSelected ? "Dashboard" : "Kontrol Paneli"}</span>
             </a>
           </div>
           <div className="chat">
             <img src="/chat.png" alt="Chat" />
             <a href="/chat" onClick={toggleMenu}>
-              <span>Chat</span>
+              <span>{eSelected ? "Chat" : "Mesaj"}</span>
             </a>
           </div>
           <div className="analysis">
             <img src="/analysis.png" alt="Analysis" />
             <a href="/analysis" onClick={toggleMenu}>
-              <span>Analysis</span>
+              <span>{eSelected ? "Analysis" : "Analiz"}</span>
             </a>
           </div>
         </div>
         <div className="auth">
+        <div className="languages">
+            <img 
+              src="/turkish.png" 
+              alt="" 
+              className={eSelected ? "" : "selected"} 
+              onClick={() => setESelected(false)}
+            />
+            <img 
+              src="/english.png" 
+              alt="" 
+              className={eSelected ? "selected" : ""} 
+              onClick={() => setESelected(true)}
+            />
+          </div>
+          <div className="authbutton">
+
           <a href="/login">
             <SignedOut>
               <SignInButton />
@@ -75,6 +92,8 @@ const Navbar = () => {
               <UserButton />
             </SignedIn>
           </a>
+          </div>
+          
         </div>
       </nav>
     </>
