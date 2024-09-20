@@ -17,7 +17,9 @@ export const data = [
   { month: 'June', Smartphones: 750, Laptops: 600, Tablets: 1000 }
 ];
 
+
 const DashboardPage = () => {
+  
   const { eSelected, setESelected } = useMyContext();
 
   const { user } = useUser();
@@ -95,23 +97,23 @@ const DashboardPage = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.0 }}
           >
-            Burcunuz: Balık
+            {eSelected ? "Your zodiac sign: Pisces" : "Burcunuz: Balık"}
           </motion.h1>
           <div className="aitext">
             <img src="./ai.png" alt="" />
             <h3>
-              Umarım güzel bir gün geçiriyorsundur. İşte senin için bazı
-              önerilerim:
+              { eSelected ? "I hope you're having a great day. Here are some suggestions for you:" : "Umarım güzel bir gün geçiriyorsundur. İşte senin için bazı önerilerim:"}
             </h3>
           </div>
-          <span>Yapay zeka ile son sohbetine git:</span>
+          <span>{eSelected ? "Go to your last conversation with the AI." :"Yapay zeka ile son sohbetine git:"}</span>
           <AiPreview />
-          <span>Ya da</span>
+          <span>{eSelected ? "Or" : "Ya da"}</span>
           <div className="buttonwrapper">
-            <button>
+            <a href="/chat"><button>
               <img src="./newmessage.png" alt="" />
-              Yeni Mesaj Oluştur
+              {eSelected ? "Create New Message" : "Yeni Mesaj Oluştur"}
             </button>
+            </a>
           </div>
         </motion.div>
       </div>

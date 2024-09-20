@@ -19,3 +19,21 @@ html, body {
     justify-content: center;
     align-items: center;
 }
+
+// Kaydırma çubuğu özelleştirmesi
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #CDC1FF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A594F9;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7364c0;
+}
