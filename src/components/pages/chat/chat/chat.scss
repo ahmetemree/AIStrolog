@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
-    
+    font-weight: bold;
     .lastchats{
         flex: 1;
         height: 100%;
@@ -27,6 +27,8 @@
             align-items: center;
             justify-content: space-between;
             width: 95%;
+            color: white;
+            font-weight: bold;
             span {
                 width: 100%;
                 background-color: #A594F9;

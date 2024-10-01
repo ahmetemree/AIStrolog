@@ -4,7 +4,6 @@ const MyContext = createContext();
 
 export const MyContextProvider = ({ children }) => {
   const [eSelected, setESelected] = useState(() => {
-    // Local Storage'dan başlangıç değerini al
     const storedValue = localStorage.getItem('eSelected');
     return storedValue ? JSON.parse(storedValue) : false;
   });

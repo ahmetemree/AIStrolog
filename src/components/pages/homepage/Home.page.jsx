@@ -25,7 +25,7 @@ export function HomePage() {
 
       </div>
         <div className="privacy">
-          <a href="/privacy-policy"><div className="text">{eSelected ? "Privacy&Policy" : "Gizlilik&Güvenlik"}</div></a>
+          <a href="/privacy-policy"><div className="text">{eSelected ? "Privacy & Policy" : "Gizlilik&Güvenlik"}</div></a>
           <div className="text">|</div>
           <a href="/contact"><div className="text">{eSelected ? "Contact" : "İletişim"}</div></a>
         </div>
