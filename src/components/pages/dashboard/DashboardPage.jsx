@@ -7,6 +7,7 @@ import { BarChart } from '@mantine/charts';
 import AiPreview from '../../aipreview/AiPreview';
 import { motion } from 'framer-motion';
 import { useMyContext } from '../../../context/Context';
+import { useRedirectContext } from '../../../context/RedirectContext';
 
 export const data = [
   { month: 'January', Smartphones: 1200, Laptops: 900, Tablets: 200 },
@@ -21,7 +22,7 @@ export const data = [
 const DashboardPage = () => {
   
   const { eSelected, setESelected } = useMyContext();
-
+  const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
   console.log(user);
   const { userId, isLoaded } = useAuth();
@@ -29,6 +30,7 @@ const DashboardPage = () => {
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/login');
+      setRedirect("dashboard")
     }
   }, [isLoaded, userId, navigate]);
 

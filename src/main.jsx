@@ -12,6 +12,7 @@ import { MantineProvider } from '@mantine/core';
 // Mantine CSS'ini import et
 import '@mantine/core/styles.css';
 import { MyContextProvider } from './context/Context';
+import { RedirectContextProvider } from './context/RedirectContext';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
@@ -29,7 +30,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     >
       <MantineProvider>
         <MyContextProvider>
+          <RedirectContextProvider>
+
           <App />
+          </RedirectContextProvider>
         </MyContextProvider>
       </MantineProvider>
       <Analytics />

@@ -7,6 +7,9 @@
     justify-content: space-between;
     overflow: hidden;
     font-weight: bold;
+    @media screen and (max-width: 1130px) {
+        flex-direction: column;
+    }
     .lastchats{
         flex: 1;
         height: 100%;
@@ -18,7 +21,13 @@
         overflow-y: scroll;
         overflow-x: hidden;
         gap: 10px;
-
+        @media screen and (max-width: 1130px) {
+            width: 80%;
+            border-bottom: 1px solid gray;
+            border-spacing: 5px;
+            flex: 2;
+            
+        }
         .newmessagewrapper{
             margin-left: 5px;
             margin-right: 5px;
