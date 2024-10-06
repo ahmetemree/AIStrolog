@@ -1,0 +1,21 @@
+.analysissss{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    .left-div{
+        width: 50%;
+        height: 100%;
+        background-color: red;
+    }
+    .right-div{
+        width: 50%;
+        height: 100%;
+        background-color: blue;
+        .message {
+            color: white; // Mesaj metni rengi
+            margin: 10px; // Mesajlar arası boşluk
+        }
+    }
+}

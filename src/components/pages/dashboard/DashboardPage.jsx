@@ -20,6 +20,18 @@ export const data = [
 
 
 const DashboardPage = () => {
+
+  const createNewChat = async () => {
+    const chatId = Date.now().toString(); // Generate a unique chat ID
+    const title = "New Chat"; // Set a default title for the new chat 
+    const response = await fetch("http://localhost:3002/userchat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, chatId, title }),
+    });
+  };  
   
   const { eSelected, setESelected } = useMyContext();
   const { redirect, setRedirect } = useRedirectContext();
@@ -37,7 +49,7 @@ const DashboardPage = () => {
   if (!isLoaded)
     return (
       <div className="loading">
-        <Loader color="blue" />;
+        <Loader color="blue" />
       </div>
     );
 
@@ -110,7 +122,7 @@ const DashboardPage = () => {
           <span>{eSelected ? "Go to your last conversation with the AI." :"Yapay zeka ile son sohbetine git:"}</span>
           <AiPreview />
           <span>{eSelected ? "Or" : "Ya da"}</span>
-          <div className="buttonwrapper">
+          <div className="buttonwrapper" onClick={createNewChat}>
             <a href="/chat"><button>
               <img src="./newmessage.png" alt="" />
               {eSelected ? "Create New Message" : "Yeni Mesaj Oluştur"}

@@ -24,6 +24,7 @@
             gap: 50px;
             @media screen and (max-width: 615px) {
                 flex-direction: row;
+                margin-top: 5px;
             }
             .astrolog{
                 img{
@@ -32,7 +33,7 @@
                     border-radius: 20px;
                     animation: sway 4s ease-in-out infinite; // Yeni eklenen satır
                     @media screen and (max-width: 615px) {
-                        width: 100px;
+                        width: 90px;
                     }
                 }
             }
@@ -44,7 +45,7 @@
                     border-radius: 20px;
                     animation: rotate 20s linear infinite; // Yeni eklenen satır
                     @media screen and (max-width: 615px) {
-                        width: 100px;
+                        width: 85px;
                     }
                 }
             }

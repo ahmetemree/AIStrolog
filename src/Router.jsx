@@ -6,6 +6,7 @@ import SignupPage from './components/pages/auth/signupPage/SignupPage.jsx';
 import DashboardPage from './components/pages/dashboard/DashboardPage.jsx';
 import Privacy from './components/pages/privacy&policy/Privacy.jsx';
 import Chat from './components/pages/chat/chat/Chat.jsx';
+import Analysis from './components/pages/Analysis/Analysis.jsx';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: '/contact',
         element: <Chat />,
+      },
+      {
+        path: '/analysis',
+        element: <Analysis />,
       },
     ]
   }
