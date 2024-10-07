@@ -7,7 +7,7 @@ const AiPreview = () => {
   return (
     <div className="aipreview">
       <div className="header">
-        <h6>AI-Strolog</h6>
+        <h6 style={{color:"white"}}>AI-Strolog</h6>
       </div>
       <div className="messagewrapper">
         <h6 className="message">
@@ -33,14 +33,20 @@ const AiPreview = () => {
       </div>
       <div className="messagewrapper">
         <h6 className="message">
-          Peki hayatımın aşkını şimdi bulabilecek miyim?
+          {eSelected
+            ? "Can I find the love of my life?"
+            : "Peki hayatımın aşkını şimdi bulabilecek miyim?"}
         </h6>
       </div>
       <div className="messageaiwrapper">
-        <h6 className="messageai">Şu anda seni bekliyor! </h6>
+        <h6 className="messageai">
+          {eSelected
+            ? "Waiting for you right now!"
+            : "Şu anda seni bekliyor!"}
+        </h6>
       </div>
       <div className="messagewrapper">
-        <button>Go To The Latest Chat</button>
+        <button>{eSelected ? "Go To The Latest Chat" : "Son Sohbete Git"}</button>
         <img src="/arrow.png" alt="" />
       </div>
     </div>

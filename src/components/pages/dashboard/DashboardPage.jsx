@@ -1,7 +1,7 @@
 import { useAuth, useUser } from '@clerk/clerk-react';
 import './dashboardPage.scss';
 import { useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Loader } from '@mantine/core';
 import { BarChart } from '@mantine/charts';
 import AiPreview from '../../aipreview/AiPreview';
@@ -123,11 +123,14 @@ const DashboardPage = () => {
           <AiPreview />
           <span>{eSelected ? "Or" : "Ya da"}</span>
           <div className="buttonwrapper" onClick={createNewChat}>
-            <a href="/chat"><button>
+            <Link to={'/chat'}>
+            
+            <button>
               <img src="./newmessage.png" alt="" />
               {eSelected ? "Create New Message" : "Yeni Mesaj Oluştur"}
             </button>
-            </a>
+            </Link>
+            
           </div>
         </motion.div>
       </div>

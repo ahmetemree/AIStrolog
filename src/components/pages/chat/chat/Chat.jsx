@@ -273,7 +273,18 @@ const Chat = () => {
         
       </div>
       <div className="messagecontainer">
-        b
+        <div className="imagecontainer">
+          <div className="wrapper">
+          <img src="/logo.png" alt="" />
+          <h6>Hadi hemen burç analizini yapalım!</h6>
+          </div>
+        </div>
+        <div className="messagebox">
+          <div className="inputcontainer">
+            <input type="text" placeholder="Mesajınızı giriniz..." />
+            <button>Gönder</button> 
+          </div>
+        </div>
       </div>
     </div>
   )
