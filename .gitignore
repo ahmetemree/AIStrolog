@@ -1,3 +1,4 @@
+.env
 logs
 *.log
 npm-debug.log*
@@ -6,4 +7,3 @@ yarn-error.log*
 pnpm-debug.log*
 node_modules
 dist
-.env
