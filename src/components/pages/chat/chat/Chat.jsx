@@ -277,6 +277,8 @@ const Chat = () => {
       </div>
     );
 
+  console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
+
   return (
     <div className="chatpage">
       <div className="lastchats">

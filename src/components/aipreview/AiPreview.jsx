@@ -9,7 +9,7 @@ const AiPreview = ({ chats }) => {
       <div className="header">
         <h6 style={{color:"white"}}>AI-Strolog</h6>
       </div>  
-      { chats.history && chats.history.map((chat, index) => (
+      { chats.history && chats.history.slice(0, 2).map((chat, index) => (
           <div className={chat.role === "user" ? "messagewrapper" : "messageaiwrapper"}>
             <h6 className="message">
               {chat.parts[0].text.slice(0, 100)}

@@ -46,7 +46,7 @@ const DashboardPage = () => {
 
   const getChats = async () => {
     // debugger
-    const response = await fetch(`${process.env.VITE_BACKEND_URL}/getchats`,{
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ const DashboardPage = () => {
   }
 
   const getSingleChat = async (chatId) => {
-    const response = await fetch(`${process.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
