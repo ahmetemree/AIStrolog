@@ -1,6 +1,6 @@
 import { useAuth, useUser } from '@clerk/clerk-react';
 import './dashboardPage.scss';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Loader } from '@mantine/core';
 import { BarChart } from '@mantine/charts';
@@ -26,15 +26,57 @@ const DashboardPage = () => {
   const { eSelected, setESelected } = useMyContext();
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
-  console.log(user);
   const { userId, isLoaded } = useAuth();
+  useEffect(() => {
+    if (isLoaded && userId) {
+      getChats();
+    }
+  }, [isLoaded, userId]);
   const navigate = useNavigate();
+  
+  const [singleChat, setSingleChat] = useState([]);
+  const [singleChatId, setSingleChatId] = useState("");
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/login');
       setRedirect("dashboard")
     }
   }, [isLoaded, userId, navigate]);
+
+
+  const getChats = async () => {
+    // debugger
+    const response = await fetch(`${process.env.VITE_BACKEND_URL}/getchats`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({userId:userId})
+    });
+    const data = await response.json();
+    // console.log("chats:",data);
+    
+    // console.log("chats:",data[data.length - 1].chats[0]._id);
+    setSingleChatId(data[data.length - 1].chats[0]._id);
+    getSingleChat(data[data.length - 1].chats[0]._id);
+  }
+
+  const getSingleChat = async (chatId) => {
+    const response = await fetch(`${process.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ chatId })
+    });
+    const data = await response.json();
+    // console.log(data);
+   setSingleChat(data);
+  }
+
+  useEffect(() => {
+    getChats();
+  }, [isLoaded]);
 
   if (!isLoaded)
     return (
@@ -110,7 +152,7 @@ const DashboardPage = () => {
             </h3>
           </div>
           <span>{eSelected ? "Go to your last conversation with the AI." :"Yapay zeka ile son sohbetine git:"}</span>
-          <AiPreview />
+          <AiPreview chats={singleChat} />
           <span>{eSelected ? "Or" : "Ya da"}</span>
           <div className="buttonwrapper" >
             <Link to={'/chat'}>

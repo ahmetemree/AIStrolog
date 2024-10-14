@@ -10,6 +10,11 @@ const Chat = () => {
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
   const { userId, isLoaded } = useAuth();
+  useEffect(() => {
+    if (isLoaded && userId) {
+      getchats();
+    }
+  }, [isLoaded, userId]);
   const [isMessageExist, setIsMessageExist] = useState(false);
   const [chats, setChats] = useState([]);
   const navigate = useNavigate();
@@ -20,6 +25,13 @@ const Chat = () => {
   const [answer, setAnswer] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [firstMessage, setFirstMessage] = useState(true);
+  const answerRef = useRef(null);
+  const [handleAnswer,setHandleAnswer] = useState(false);
+  
+  const [loading, setLoading] = useState(false);
+
+
+
   const chat = model.startChat({
     history:
       chatHistory.length > 0
@@ -36,78 +48,146 @@ const Chat = () => {
     }
   });
 
-  const add = async (text, isInitial) => {
-    if (!isInitial) setQuestion(text);
 
+  
+
+
+
+
+  const handleNewChat = async () => {
+    setIsMessageExist(false);
+    setFirstMessage(true);
+    setAnswer('');
+    setChatHistory([]);
+    setChatId("");
+  }
+
+  
+
+  const add = async (text, isInitial,generatedchatId) => {
+    let currentChatId = ""
+    if(firstMessage && generatedchatId != ""){
+      currentChatId = generatedchatId;
+    }
+    else{
+     currentChatId = chatId;
+    }
+    setLoading(true);
+    
+    if (!isInitial) setQuestion(text);
+    if(!firstMessage){
+      await updateChat("user",[{text:text}],currentChatId);
+    }
+    
     try {
       const result = await chat.sendMessage(text);
       const response = result.response.text();
       setIsTyping(true);
       let displayedAnswer = '';
+      setHandleAnswer(true);
       for (let i = 0; i < response.length; i++) {
         displayedAnswer += response[i];
         setAnswer(displayedAnswer);
-        await new Promise(resolve => setTimeout(resolve, 20)); // Her harf için 50ms bekle
+        await new Promise(resolve => setTimeout(resolve, 20));
       }
       setIsTyping(false);
+      await updateChat("model",[{text:displayedAnswer}],currentChatId);
+      await getChatHistory(currentChatId);
+      setHandleAnswer(false);
+      setAnswer('');
     } catch (err) {
       console.log(err);
       setIsTyping(false);
     }
-    updateChat("ai",[{text:answer}]);
+    setLoading(false);
   };
+
 
   const handleSendMessage = async () => {
+    if (loading) return;
     debugger
     setIsMessageExist(true);
-    
-    if(firstMessage){
-      await createNewChat();
-      setFirstMessage(false);
+    let newChatId ="";
+    try {
+      if (firstMessage) {
+        setFirstMessage(false);
+        newChatId = await createNewChat();
+      }
+      
+      const inputValue = inputRef.current.value;
+      inputRef.current.value = '';
+      
+      // Kullanıcı mesajını hemen ekleyin
+      setChatHistory(prevHistory => [...prevHistory, { role: 'user', parts: [{ text: inputValue }] }]);
+      
+      await add(inputValue, true,newChatId);
+    } catch (error) {
+      console.error('Mesaj gönderme hatası:', error);
     }
-    getchats();
-    
-   
-    add(inputRef.current.value, true);
   };
 
-  const updateChat = async (role,parts) => {
-    const response = await fetch(`http://localhost:3002/updatechat/${chatId}`, {
+
+
+
+  const updateChat = async (role,parts,generatedchatId) => {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ role:role,parts:parts ,chatId:chatId})
+      body: JSON.stringify({ role:role,parts:parts ,chatId:generatedchatId})
     });
     const data = await response.json();
     console.log(data);
-    
   }
+
+
+
+
   const createNewChat = async () => {
-    const generatedChatId = Date.now().toString();
     
-    // setChatId'yi beklemek yerine doğrudan generatedChatId'yi kullanın
+    const generatedChatId = Date.now().toString();
+       
     const title = inputRef.current ? inputRef.current.value.slice(0, 10) : '';
     const history = [
       { role: 'user', parts: [{ text: inputRef.current.value }] }
     ];
     
-    const response = await fetch('http://localhost:3002/createchat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
-    });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/createchat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
+      });
 
-    // State'i güncelleyin ve getChatHistory'yi çağırın
-    await setChatId(generatedChatId);
-    await getChatHistory(generatedChatId);
+      if (!response.ok) {
+        throw new Error('Yeni sohbet oluşturulamadı');
+      }
+      
+      setChatId(generatedChatId);
+      getChatHistory(generatedChatId);
+      setChats(prevChats => [...prevChats, { chats: [{ _id: generatedChatId, title }] }]);
+      return generatedChatId;
+    } catch (error) {
+      console.error('Yeni sohbet oluşturma hatası:', error);
+      throw error;
+    }
+
     
   };
 
-  const getChatHistory = async chatId => {
-    const response = await fetch(`http://localhost:3002/getchat/${chatId}`, {
+
+
+  const scrollIntoView = () => {
+    answerRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+
+
+  const getChatHistory = async (generatedchatId) => {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -121,12 +201,16 @@ const Chat = () => {
     console.log(data.history);
     console.log("chatHistory:");
     console.log(chatHistory);
+    answerRef.current.scrollIntoView({ behavior: 'smooth' });
   };
+
+
+
 
   const handleDeleteChat = async chatId => {
     try {
       const response = await fetch(
-        `http://localhost:3002/deletechat/${chatId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/deletechat/${chatId}`,
         {
           method: 'DELETE',
           headers: {
@@ -143,15 +227,21 @@ const Chat = () => {
       console.error('Sohbet silme hatası:', error);
     }
   };
+  
+  
+
+
 
   const getchats = async () => {
+    console.log("getchats geldi");
     try {
-      const response = await fetch('http://localhost:3002/getchats', {
-        method: 'GET',
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
-        // GET isteğinde body kullanılmaz, bu satırı kaldırıyoruz
+        },
+        body: JSON.stringify({userId:userId})
+       
       });
 
       if (!response.ok) {
@@ -166,12 +256,15 @@ const Chat = () => {
     }
   };
 
+
+
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/login');
       setRedirect('chat');
     }
   }, [isLoaded, userId, navigate]);
+  
 
   useEffect(() => {
     getchats();
@@ -188,7 +281,7 @@ const Chat = () => {
     <div className="chatpage">
       <div className="lastchats">
         <div className="newmessagewrapper">
-          <span onClick={() => {setIsMessageExist(false); setFirstMessage(true)}}>Yeni Sohbet</span>
+          <span onClick={() => {handleNewChat()}}>Yeni Sohbet</span>
           {/* <img src="/newmessage.png" alt="" /> */}
         </div>
 
@@ -196,7 +289,7 @@ const Chat = () => {
           <div key={chat.chats._id} className="chatwrapper" onClick={()=>setFirstMessage(false)}>
             <span
               onClick={() =>
-                getChatHistory(chat.chats[0]._id, setIsMessageExist(true))
+                getChatHistory(chat.chats[0]._id, setIsMessageExist(true),setChatId(chat.chats[0]._id))
               }
             >
               {chat.chats[0].title}
@@ -219,9 +312,8 @@ const Chat = () => {
           }
         >
           {isMessageExist ? (
-            // Mesajlar varsa buraya gösterilecek içerik gelecek
-            chatHistory.map((message, index) => (
-              <>
+            <>
+              {chatHistory.map((message, index) => (
                 <div
                   key={index}
                   className={
@@ -230,18 +322,16 @@ const Chat = () => {
                 >
                   <span>{message.parts[0].text}</span>
                 </div>
-                <div className="usermessage">
-                  <span>{inputRef.current.value}</span>
+              ))}
+              {handleAnswer && (
+                <div className="answer" ref={answerRef}>
+                  <span>
+                    {answer}
+                    {isTyping && <span className="blinking-cursor">|</span>}
+                  </span>
                 </div>
-                <div className="answer">
-                  {isTyping ? (
-                    <span>{answer}<span className="blinking-cursor">|</span></span>
-                  ) : (
-                    <span>{answer}</span>
-                  )}
-                </div>
-              </>
-            ))
+              )}
+            </>
           ) : (
             <div className="wrapper">
               <img src="/logo.png" alt="" />
@@ -255,9 +345,14 @@ const Chat = () => {
               type="text"
               placeholder="Mesajınızı giriniz..."
               ref={inputRef}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSendMessage();
+                }
+              }}
             />
-            <button onClick={handleSendMessage} ref={buttonRef}>
-              Gönder
+            <button onClick={handleSendMessage} ref={buttonRef} disabled={loading}>
+              {loading ? 'Gönderiliyor...' : 'Gönder'}
             </button>
           </div>
         </div>

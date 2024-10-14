@@ -68,6 +68,7 @@
             color: white;
             font-size: 14px;
             text-align: right;
+            // overflow: hidden;
             padding-right: 20px; // eklendi: üstten biraz boşluk bırakmak için
     padding-left: 20px; // eklendi: üstten biraz boşluk bırakmak için
     margin-top: 10px;
@@ -79,10 +80,12 @@
 
     .messageaiwrapper{
         align-self: flex-start;
-        .messageai{
+        .message{
+            max-width: 50%;
             color: white;
             font-size: 14px;
             text-align: left;
+            // overflow: hidden;
             padding-right: 20px; // eklendi: üstten biraz boşluk bırakmak için
     padding-left: 20px; // eklendi: üstten biraz boşluk bırakmak için
     @media screen and (max-width: 615px) {
