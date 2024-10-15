@@ -27,19 +27,19 @@ export function HomePage() {
         >
           <motion.h1
           initial={{ opacity: 0, y: 250 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9 }}
           >{eSelected ? "An AI-powered horoscope assistant designed just for you, offering detailed analysis." : "Senin için hazırlanmış Yapay zeka destekli analiz yapan bir burç asistanı"}</motion.h1>
           <motion.h3
           initial={{ opacity: 0, y: 250 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1}}
           >{eSelected ? "Go ahead and enter your birth date to discover your horoscope analyses!" : "Hadi hemen sen de doğum tarihini girerek burç analizlerini öğren!"}</motion.h3>
           <Link to={'/dashboard'}>
           
           <motion.button
           initial={{ opacity: 0, y: 150 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.3 }}
           >{eSelected ? "Let's start!" : "Haydi Başlayalım!"}</motion.button>
           </Link>

@@ -47,11 +47,12 @@ const DashboardPage = () => {
   const getChats = async () => {
     // debugger
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`,{
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({userId:userId})
+      credentials: 'include',
+      
     });
     const data = await response.json();
     // console.log("chats:",data);
@@ -67,6 +68,7 @@ const DashboardPage = () => {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify({ chatId })
     });
     const data = await response.json();
@@ -151,7 +153,7 @@ const DashboardPage = () => {
               { eSelected ? "I hope you're having a great day. Here are some suggestions for you:" : "Umarım güzel bir gün geçiriyorsundur. İşte senin için bazı önerilerim:"}
             </h3>
           </div>
-          <span>{eSelected ? "Go to your last conversation with the AI." :"Yapay zeka ile son sohbetine git:"}</span>
+          <span >{eSelected ? "Go to your last conversation with the AI." :"Yapay zeka ile son sohbetine git:"}</span>
           <AiPreview chats={singleChat} />
           <span>{eSelected ? "Or" : "Ya da"}</span>
           <div className="buttonwrapper" >

@@ -10,11 +10,14 @@ const Chat = () => {
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
   const { userId, isLoaded } = useAuth();
+  
   useEffect(() => {
     if (isLoaded && userId) {
       getchats();
     }
+    
   }, [isLoaded, userId]);
+
   const [isMessageExist, setIsMessageExist] = useState(false);
   const [chats, setChats] = useState([]);
   const navigate = useNavigate();
@@ -135,10 +138,10 @@ const Chat = () => {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify({ role:role,parts:parts ,chatId:generatedchatId})
     });
     const data = await response.json();
-    console.log(data);
   }
 
 
@@ -159,6 +162,7 @@ const Chat = () => {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
       });
 
@@ -192,15 +196,13 @@ const Chat = () => {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify({ chatId })
     });
 
     const data = await response.json();
     await setChatHistory(data.history);
-    console.log("data.history:");
-    console.log(data.history);
-    console.log("chatHistory:");
-    console.log(chatHistory);
+   
     answerRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -215,7 +217,8 @@ const Chat = () => {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          credentials: 'include',
         }
       );
       if (!response.ok) {
@@ -233,15 +236,13 @@ const Chat = () => {
 
 
   const getchats = async () => {
-    console.log("getchats geldi");
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({userId:userId})
-       
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -263,6 +264,31 @@ const Chat = () => {
       navigate('/login');
       setRedirect('chat');
     }
+   }, [isLoaded, userId, navigate]);
+
+  useEffect(() => {
+    const fetchChatFromUrl = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const chatIdFromUrl = urlParams.get('id');
+      const pathSegments = window.location.pathname.split('/');
+      const chatIdFromPath = pathSegments[pathSegments.length - 1];
+      if (chatIdFromPath && chatIdFromPath !== 'chat') {
+        setIsMessageExist(true);
+        setChatId(chatIdFromPath);
+        await getChatHistory(chatIdFromPath);
+      }
+      if (chatIdFromUrl) {
+        setIsMessageExist(true);
+        setChatId(chatIdFromUrl);
+        await getChatHistory(chatIdFromUrl);
+      }
+    };
+    
+    if (isLoaded && userId) {
+      fetchChatFromUrl();
+    }
+
+    
   }, [isLoaded, userId, navigate]);
   
 
@@ -277,7 +303,6 @@ const Chat = () => {
       </div>
     );
 
-  console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
 
   return (
     <div className="chatpage">

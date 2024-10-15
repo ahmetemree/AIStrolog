@@ -1,9 +1,10 @@
+import { Link } from 'react-router-dom';
 import { useMyContext } from '../../context/Context';
 import './aipreview.scss';
 
 const AiPreview = ({ chats }) => {
   const { eSelected, setESelected } = useMyContext();
-  
+  console.log(chats);
   return (
     <div className="aipreview">
       <div className="header">
@@ -17,7 +18,9 @@ const AiPreview = ({ chats }) => {
           </div>
       ))}
       <div className="messagewrapper">
-        <button>{eSelected ? "Go To The Latest Chat" : "Son Sohbete Git"}</button>
+        <Link to={`/chat/${chats.chatId}`}>
+          <button>{eSelected ? "Son Sohbete Git" : "Son Sohbete Git"}</button>
+        </Link>
         <img src="/arrow.png" alt="" />
       </div>
     </div>
