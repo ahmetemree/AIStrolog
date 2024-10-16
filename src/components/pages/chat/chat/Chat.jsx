@@ -32,8 +32,15 @@ const Chat = () => {
   const [handleAnswer,setHandleAnswer] = useState(false);
   
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatHistory, answer]);
 
   const chat = model.startChat({
     history:
@@ -51,12 +58,6 @@ const Chat = () => {
     }
   });
 
-
-  
-
-
-
-
   const handleNewChat = async () => {
     setIsMessageExist(false);
     setFirstMessage(true);
@@ -64,8 +65,6 @@ const Chat = () => {
     setChatHistory([]);
     setChatId("");
   }
-
-  
 
   const add = async (text, isInitial,generatedchatId) => {
     let currentChatId = ""
@@ -89,15 +88,19 @@ const Chat = () => {
       let displayedAnswer = '';
       setHandleAnswer(true);
       for (let i = 0; i < response.length; i++) {
+        scrollToBottom();
         displayedAnswer += response[i];
         setAnswer(displayedAnswer);
         await new Promise(resolve => setTimeout(resolve, 20));
+        
+        
       }
       setIsTyping(false);
       await updateChat("model",[{text:displayedAnswer}],currentChatId);
       await getChatHistory(currentChatId);
       setHandleAnswer(false);
       setAnswer('');
+      
     } catch (err) {
       console.log(err);
       setIsTyping(false);
@@ -105,10 +108,8 @@ const Chat = () => {
     setLoading(false);
   };
 
-
   const handleSendMessage = async () => {
     if (loading) return;
-    debugger
     setIsMessageExist(true);
     let newChatId ="";
     try {
@@ -120,7 +121,6 @@ const Chat = () => {
       const inputValue = inputRef.current.value;
       inputRef.current.value = '';
       
-      // Kullanıcı mesajını hemen ekleyin
       setChatHistory(prevHistory => [...prevHistory, { role: 'user', parts: [{ text: inputValue }] }]);
       
       await add(inputValue, true,newChatId);
@@ -128,9 +128,6 @@ const Chat = () => {
       console.error('Mesaj gönderme hatası:', error);
     }
   };
-
-
-
 
   const updateChat = async (role,parts,generatedchatId) => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
@@ -144,11 +141,7 @@ const Chat = () => {
     const data = await response.json();
   }
 
-
-
-
   const createNewChat = async () => {
-    
     const generatedChatId = Date.now().toString();
        
     const title = inputRef.current ? inputRef.current.value.slice(0, 10) : '';
@@ -178,17 +171,7 @@ const Chat = () => {
       console.error('Yeni sohbet oluşturma hatası:', error);
       throw error;
     }
-
-    
   };
-
-
-
-  const scrollIntoView = () => {
-    answerRef.current.scrollIntoView({ behavior: 'smooth' });
-  };
-
-
 
   const getChatHistory = async (generatedchatId) => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
@@ -202,12 +185,7 @@ const Chat = () => {
 
     const data = await response.json();
     await setChatHistory(data.history);
-   
-    answerRef.current.scrollIntoView({ behavior: 'smooth' });
   };
-
-
-
 
   const handleDeleteChat = async chatId => {
     try {
@@ -230,10 +208,6 @@ const Chat = () => {
       console.error('Sohbet silme hatası:', error);
     }
   };
-  
-  
-
-
 
   const getchats = async () => {
     try {
@@ -251,13 +225,10 @@ const Chat = () => {
 
       const data = await response.json();
       setChats(data);
-      // Burada, alınan sohbetleri state'e kaydedebilirsiniz
     } catch (error) {
       console.error('Sohbetleri alma hatası:', error);
     }
   };
-
-
 
   useEffect(() => {
     if (isLoaded && !userId) {
@@ -287,14 +258,11 @@ const Chat = () => {
     if (isLoaded && userId) {
       fetchChatFromUrl();
     }
-
-    
   }, [isLoaded, userId, navigate]);
   
-
   useEffect(() => {
     getchats();
-  }, []); // Boş bağımlılık dizisi, sadece bileşen monte edildiğinde çalışır
+  }, []);
 
   if (!isLoaded)
     return (
@@ -303,13 +271,11 @@ const Chat = () => {
       </div>
     );
 
-
   return (
     <div className="chatpage">
       <div className="lastchats">
         <div className="newmessagewrapper">
           <span onClick={() => {handleNewChat()}}>Yeni Sohbet</span>
-          {/* <img src="/newmessage.png" alt="" /> */}
         </div>
 
         {chats.map(chat => (
@@ -351,13 +317,14 @@ const Chat = () => {
                 </div>
               ))}
               {handleAnswer && (
-                <div className="answer" ref={answerRef}>
+                <div className="answer">
                   <span>
                     {answer}
                     {isTyping && <span className="blinking-cursor">|</span>}
                   </span>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </>
           ) : (
             <div className="wrapper">
