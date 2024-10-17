@@ -10,7 +10,7 @@ const AiPreview = ({ chats }) => {
       <div className="header">
         <h6 style={{color:"white"}}>AI-Strolog</h6>
       </div>  
-      { chats.history && chats.history.slice(0, 2).map((chat, index) => (
+      { chats?.history && chats?.history.slice(0, 2).map((chat, index) => (
           <div className={chat.role === "user" ? "messagewrapper" : "messageaiwrapper"}>
             <h6 className="message">
               {chat.parts[0].text.slice(0, 100)}
@@ -18,7 +18,7 @@ const AiPreview = ({ chats }) => {
           </div>
       ))}
       <div className="messagewrapper">
-        <Link to={`/chat/${chats.chatId}`}>
+        <Link to={`/chat/${chats?.chatId}`}>
           <button>{eSelected ? "Son Sohbete Git" : "Son Sohbete Git"}</button>
         </Link>
         <img src="/arrow.png" alt="" />
