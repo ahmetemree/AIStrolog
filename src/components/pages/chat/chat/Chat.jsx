@@ -1,6 +1,6 @@
 import { Loader } from '@mantine/core';
 import './chat.scss';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useAuth, useUser, useSession } from '@clerk/clerk-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRedirectContext } from '../../../../context/RedirectContext';
@@ -10,13 +10,18 @@ const Chat = () => {
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
   const { userId, isLoaded } = useAuth();
+  const { session } = useSession();
+  const [token, setToken] = useState('');
   
   useEffect(() => {
     if (isLoaded && userId) {
       getchats();
     }
     
-  }, [isLoaded, userId]);
+    if (session) {
+      session.getToken().then(setToken);
+    }
+  }, [isLoaded, userId, session]);
 
   const [isMessageExist, setIsMessageExist] = useState(false);
   const [chats, setChats] = useState([]);
@@ -132,7 +137,8 @@ const Chat = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       credentials: 'include',
       body: JSON.stringify({ role:role,parts:parts ,chatId:generatedchatId})
@@ -152,7 +158,8 @@ const Chat = () => {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/createchat`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         credentials: 'include',
         body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
@@ -176,7 +183,8 @@ const Chat = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       credentials: 'include',
       body: JSON.stringify({ chatId })
@@ -193,7 +201,8 @@ const Chat = () => {
         {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           credentials: 'include',
         }
@@ -213,7 +222,8 @@ const Chat = () => {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         credentials: 'include'
       });
