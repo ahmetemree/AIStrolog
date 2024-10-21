@@ -53,7 +53,9 @@ const Chat = () => {
   }, [isSignedIn, getToken]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+    }
   };
 
   useEffect(() => {
@@ -82,11 +84,13 @@ const Chat = () => {
     setAnswer('');
     setChatHistory([]);
     setChatId("");
-    ref();
+    
   }
 
   const add = async (text, isInitial,generatedchatId) => {
     refreshToken();
+    setHandleAnswer(true);
+    
     let currentChatId = ""
     if(firstMessage && generatedchatId != ""){
       currentChatId = generatedchatId;
@@ -102,21 +106,36 @@ const Chat = () => {
     }
     
     try {
+      
+      let dots = '.';
+      const animateDots = setInterval(() => {
+        dots = dots.length < 3 ? dots + '.' : '.';
+        setAnswer('' + dots);
+      }, 500);
+
       const result = await chat.sendMessage(text);
+      clearInterval(animateDots);
+      setIsTyping(false);
+
       const response = result.response.text();
-      setIsTyping(true);
       let displayedAnswer = '';
-      setHandleAnswer(true);
-      for (let i = 0; i < response.length; i++) {
-        displayedAnswer += response[i];
+      const lines = response.split('\n');
+
+      setIsTyping(true);
+      for (let line of lines) {
+        for (let char of line) {
+          displayedAnswer += char;
+          setAnswer(displayedAnswer);
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+        displayedAnswer += '\n';
         setAnswer(displayedAnswer);
-        await new Promise(resolve => setTimeout(resolve, 20));
-        
-        
+        scrollToBottom();
+        await new Promise(resolve => setTimeout(resolve, 100)); // Satır sonu beklemesi
       }
       refreshToken();
       setIsTyping(false);
-      await updateChat("model",[{text:displayedAnswer}],currentChatId);
+      await updateChat("model", [{ text: displayedAnswer }], currentChatId);
       await getChatHistory(currentChatId);
       setHandleAnswer(false);
       setAnswer('');
@@ -312,25 +331,29 @@ const Chat = () => {
           <span onClick={() => {handleNewChat()}}>Yeni Sohbet</span>
         </div>
 
-        {chats.map(chat => (
-          <div key={chat.chats._id} className="chatwrapper" onClick={()=>setFirstMessage(false)}>
-            <span
-              onClick={() =>
-                getChatHistory(chat.chats[0]._id, setIsMessageExist(true),setChatId(chat.chats[0]._id))
-              }
-            >
-              {chat.chats[0].title}
-            </span>
-            <img
-              src="/delete.png"
-              alt=""
-              onClick={() => {
-                handleDeleteChat(chat.chats[0]._id);
-                getChatHistory(chats[chats.length - 2]?.chats[0]._id);
-              }}
-            />
-          </div>
-        ))}
+        {chats.length === 0 ? (
+          <div className="loading">Yükleniyor...</div>
+        ) : (
+          chats.map(chat => (
+            <div key={chat.chats._id} className="chatwrapper" onClick={()=>setFirstMessage(false)}>
+              <span
+                onClick={() =>
+                  getChatHistory(chat.chats[0]._id, setIsMessageExist(true),setChatId(chat.chats[0]._id))
+                }
+              >
+                {chat.chats[0].title}
+              </span>
+              <img
+                src="/delete.png"
+                alt=""
+                onClick={() => {
+                  handleDeleteChat(chat.chats[0]._id);
+                  getChatHistory(chats[chats.length - 2]?.chats[0]._id);
+                }}
+              />
+            </div>
+          ))
+        )}
       </div>
       <div className="messagecontainer">
         <div
@@ -353,7 +376,7 @@ const Chat = () => {
               {handleAnswer && (
                 <div className="answer">
                   <span>
-                    {answer}
+                    {answer ? answer : isTyping && <span className="blinking-cursor">|</span>}
                     {isTyping && <span className="blinking-cursor">|</span>}
                   </span>
                 </div>
