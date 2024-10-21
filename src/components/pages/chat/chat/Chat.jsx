@@ -40,8 +40,8 @@ const Chat = () => {
     if (isSignedIn) {
       const newToken = await getToken();
       setUserToken(newToken);
-      const { userId } = useAuth();
-      setUserId(userId);
+      
+      setUserId(useAuth().userId);
     }
   };
   useEffect(() => {
@@ -124,6 +124,7 @@ const Chat = () => {
     } catch (err) {
       console.log(err);
       setIsTyping(false);
+      setAnswer("Bir hata oluştu lütfen daha sonra tekrar deneyiniz.");
     }
     setLoading(false);
   };
