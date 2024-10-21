@@ -76,9 +76,11 @@ const Chat = () => {
     setAnswer('');
     setChatHistory([]);
     setChatId("");
+    takeToken();
   }
 
   const add = async (text, isInitial,generatedchatId) => {
+    takeToken();
     let currentChatId = ""
     if(firstMessage && generatedchatId != ""){
       currentChatId = generatedchatId;
@@ -120,6 +122,7 @@ const Chat = () => {
   };
 
   const handleSendMessage = async () => {
+    takeToken();
     if (loading) return;
     setIsMessageExist(true);
     let newChatId ="";
@@ -141,6 +144,7 @@ const Chat = () => {
   };
 
   const updateChat = async (role,parts,generatedchatId) => {
+    takeToken();
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
       method: 'PUT',
       headers: {
@@ -154,6 +158,7 @@ const Chat = () => {
   }
 
   const createNewChat = async () => {
+    takeToken();
     const generatedChatId = Date.now().toString();
        
     const title = inputRef.current ? inputRef.current.value.slice(0, 10) : '';
@@ -187,6 +192,7 @@ const Chat = () => {
   };
 
   const getChatHistory = async (generatedchatId) => {
+    takeToken();
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
       method: 'POST',
       headers: {
@@ -202,7 +208,7 @@ const Chat = () => {
   };
 
   const handleDeleteChat = async chatId => {
-    try {
+      try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/deletechat/${chatId}`,
         {
@@ -225,6 +231,7 @@ const Chat = () => {
   };
 
   const getchats = async () => {
+    takeToken();
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
         method: 'GET',
@@ -256,6 +263,7 @@ const Chat = () => {
 
   useEffect(() => {
     const fetchChatFromUrl = async () => {
+      takeToken();
       const urlParams = new URLSearchParams(window.location.search);
       const chatIdFromUrl = urlParams.get('id');
       const pathSegments = window.location.pathname.split('/');
@@ -278,6 +286,7 @@ const Chat = () => {
   }, [isLoaded, userId, navigate]);
   
   useEffect(() => {
+    takeToken();
     getchats();
   }, []);
 
