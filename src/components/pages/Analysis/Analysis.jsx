@@ -11,14 +11,11 @@ const Analysis = () => {
 
   return (
     <div className='analysissss'>
-      <div className='left-div'>Left Div</div>
+      <div className='left-div'>
+        left
+      </div>
       <div className='right-div'>
-        {messages.map((msg, index) => (
-          <div key={index} className='message'>
-            <p>{msg.text}</p>
-            <p>Olumlu Yüzde: {msg.positive}%</p>
-          </div>
-        ))}
+       right
       </div>
     </div>
   )

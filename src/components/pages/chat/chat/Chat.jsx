@@ -34,6 +34,18 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const { getToken,isSignedIn } = useAuth();
+  const [token,setUserToken] = useState("")
+
+  const takeToken = async ()=>{
+    const takenToken = await getToken();
+    setUserToken(takenToken)
+    return takenToken
+  }
+  useEffect(()=>{
+    takeToken()
+  },[])
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -132,7 +144,8 @@ const Chat = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       credentials: 'include',
       body: JSON.stringify({ role:role,parts:parts ,chatId:generatedchatId})
@@ -152,7 +165,8 @@ const Chat = () => {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/createchat`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         credentials: 'include',
         body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
@@ -176,7 +190,8 @@ const Chat = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       credentials: 'include',
       body: JSON.stringify({ chatId })
@@ -193,7 +208,8 @@ const Chat = () => {
         {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
           credentials: 'include',
         }
@@ -213,9 +229,11 @@ const Chat = () => {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        credentials: 'include'
+        credentials: 'include',
+        
       });
 
       if (!response.ok) {

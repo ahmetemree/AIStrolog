@@ -5,14 +5,19 @@
     width: 100%;
     height: 100%;
     .left-div{
-        width: 50%;
+        width: 100%;
         height: 100%;
-        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .right-div{
-        width: 50%;
+        width: 100%;
         height: 100%;
-        background-color: blue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
         .message {
             color: white; // Mesaj metni rengi
             margin: 10px; // Mesajlar arası boşluk
