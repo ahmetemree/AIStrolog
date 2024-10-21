@@ -26,7 +26,9 @@ const DashboardPage = () => {
   const { eSelected, setESelected } = useMyContext();
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
-  const { userId, isLoaded } = useAuth();
+  const { userId, isLoaded,getToken } = useAuth();
+  const [token, setUserToken] = useState("");
+
   useEffect(() => {
     if (isLoaded && userId) {
       getChats();
@@ -36,6 +38,22 @@ const DashboardPage = () => {
   
   const [singleChat, setSingleChat] = useState([]);
   const [singleChatId, setSingleChatId] = useState("");
+  const refreshToken = async () => {
+    if (isSignedIn) {
+      const newToken = await getToken();
+      setUserToken(newToken);
+      
+    }
+  };
+  useEffect(() => {
+
+    refreshToken();
+    const intervalId = setInterval(refreshToken, 50 * 60 * 1000); // Her 5 dakikada bir yenile
+
+    return () => clearInterval(intervalId);
+  }, [isSignedIn, getToken]);
+
+
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/login');
@@ -49,7 +67,8 @@ const DashboardPage = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`,{
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`
       },
       credentials: 'include',
       
@@ -66,7 +85,8 @@ const DashboardPage = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`
       },
       credentials: 'include',
       body: JSON.stringify({ chatId })
