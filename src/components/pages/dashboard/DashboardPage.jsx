@@ -26,29 +26,49 @@ const DashboardPage = () => {
   const { eSelected, setESelected } = useMyContext();
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
-  const { userId, isLoaded,getToken } = useAuth();
+  const { userId, isLoaded, getToken, isSignedIn } = useAuth();
   const [token, setUserToken] = useState("");
 
   useEffect(() => {
-    if (isLoaded && userId) {
+    const fetchToken = async () => {
+      if (isSignedIn) {
+        try {
+          const newToken = await getToken();
+          setUserToken(newToken);
+        } catch (error) {
+          console.error("Token alınamadı:", error);
+        }
+      }
+    };
+
+    fetchToken();
+  }, [isSignedIn, getToken]);
+
+  useEffect(() => {
+    if (isLoaded && userId && token) {
       getChats();
     }
-  }, [isLoaded, userId]);
+  }, [isLoaded, userId, token]);
+
   const navigate = useNavigate();
   
   const [singleChat, setSingleChat] = useState([]);
   const [singleChatId, setSingleChatId] = useState("");
+  
   const refreshToken = async () => {
     if (isSignedIn) {
-      const newToken = await getToken();
-      setUserToken(newToken);
-      
+      try {
+        const newToken = await getToken();
+        setUserToken(newToken);
+      } catch (error) {
+        console.error("Token yenilenemedi:", error);
+      }
     }
   };
-  useEffect(() => {
 
+  useEffect(() => {
     refreshToken();
-    const intervalId = setInterval(refreshToken, 50 * 60 * 1000); // Her 5 dakikada bir yenile
+    const intervalId = setInterval(refreshToken, 50 * 60 * 1000); // Her 50 dakikada bir yenile
 
     return () => clearInterval(intervalId);
   }, [isSignedIn, getToken]);
@@ -63,42 +83,68 @@ const DashboardPage = () => {
 
 
   const getChats = async () => {
-    // debugger
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`,{
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`
-      },
-      credentials: 'include',
-      
-    });
-    const data = await response.json();
-    // console.log("chats:",data);
-    
-    // console.log("chats:",data[data.length - 1].chats[0]._id);
-    setSingleChatId(data[data.length - 1].chats[0]._id);
-    getSingleChat(data[data.length - 1].chats[0]._id);
+    if (!token) {
+      console.error("Token bulunamadı");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.length > 0 && data[data.length - 1].chats.length > 0) {
+        setSingleChatId(data[data.length - 1].chats[0]._id);
+        getSingleChat(data[data.length - 1].chats[0]._id);
+      }
+    } catch (error) {
+      console.error("Sohbetler alınamadı:", error);
+    }
   }
 
   const getSingleChat = async (chatId) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`
-      },
-      credentials: 'include',
-      body: JSON.stringify({ chatId })
-    });
-    const data = await response.json();
-    // console.log(data);
-   setSingleChat(data);
+    if (!token) {
+      console.error("Token bulunamadı");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: JSON.stringify({ chatId })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setSingleChat(data);
+    } catch (error) {
+      console.error("Tek sohbet alınamadı:", error);
+    }
   }
 
   useEffect(() => {
-    getChats();
-  }, [isLoaded]);
+    if (token) {
+      getChats();
+    }
+  }, [token]);
 
   if (!isLoaded)
     return (
