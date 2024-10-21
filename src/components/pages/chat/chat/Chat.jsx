@@ -31,6 +31,7 @@ const Chat = () => {
   const answerRef = useRef(null);
   const [handleAnswer,setHandleAnswer] = useState(false);
   
+  
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -41,7 +42,6 @@ const Chat = () => {
       const newToken = await getToken();
       setUserToken(newToken);
       
-      setUserId(useAuth().userId);
     }
   };
   useEffect(() => {
