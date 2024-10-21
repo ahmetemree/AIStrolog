@@ -9,7 +9,7 @@ import model from '../../../../lib/gemini';
 const Chat = () => {
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
-  const { userId, isLoaded } = useAuth();
+  const { userId, isLoaded, getToken, isSignedIn } = useAuth();
   
   useEffect(() => {
     if (isLoaded && userId) {
@@ -34,17 +34,23 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const { getToken,isSignedIn } = useAuth();
-  const [token,setUserToken] = useState("")
+  const [token, setUserToken] = useState("");
 
-  const takeToken = async ()=>{
-    const takenToken = await getToken();
-    setUserToken(takenToken)
-    return takenToken
-  }
-  useEffect(async ()=>{
-    await takeToken()
-  },[])
+  const refreshToken = async () => {
+    if (isSignedIn) {
+      const newToken = await getToken();
+      setUserToken(newToken);
+      const { userId } = useAuth();
+      setUserId(userId);
+    }
+  };
+  useEffect(() => {
+
+    refreshToken();
+    const intervalId = setInterval(refreshToken, 50 * 60 * 1000); // Her 5 dakikada bir yenile
+
+    return () => clearInterval(intervalId);
+  }, [isSignedIn, getToken]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -71,16 +77,16 @@ const Chat = () => {
   });
 
   const handleNewChat = async () => {
-    await takeToken();
     setIsMessageExist(false);
     setFirstMessage(true);
     setAnswer('');
     setChatHistory([]);
     setChatId("");
+    ref();
   }
 
   const add = async (text, isInitial,generatedchatId) => {
-    await takeToken();
+    refreshToken();
     let currentChatId = ""
     if(firstMessage && generatedchatId != ""){
       currentChatId = generatedchatId;
@@ -108,6 +114,7 @@ const Chat = () => {
         
         
       }
+      refreshToken();
       setIsTyping(false);
       await updateChat("model",[{text:displayedAnswer}],currentChatId);
       await getChatHistory(currentChatId);
@@ -122,7 +129,7 @@ const Chat = () => {
   };
 
   const handleSendMessage = async () => {
-    await takeToken();
+    refreshToken();
     if (loading) return;
     setIsMessageExist(true);
     let newChatId ="";
@@ -144,7 +151,7 @@ const Chat = () => {
   };
 
   const updateChat = async (role,parts,generatedchatId) => {
-    await takeToken();
+    refreshToken();
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
       method: 'PUT',
       headers: {
@@ -158,7 +165,7 @@ const Chat = () => {
   }
 
   const createNewChat = async () => {
-    await takeToken();
+    refreshToken();
     const generatedChatId = Date.now().toString();
        
     const title = inputRef.current ? inputRef.current.value.slice(0, 10) : '';
@@ -192,7 +199,7 @@ const Chat = () => {
   };
 
   const getChatHistory = async (generatedchatId) => {
-    await takeToken();
+    refreshToken();
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
       method: 'POST',
       headers: {
@@ -208,7 +215,6 @@ const Chat = () => {
   };
 
   const handleDeleteChat = async chatId => {
-    await takeToken();
       try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/deletechat/${chatId}`,
@@ -232,7 +238,7 @@ const Chat = () => {
   };
 
   const getchats = async () => {
-    await takeToken();
+    refreshToken();
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
         method: 'GET',
@@ -264,7 +270,7 @@ const Chat = () => {
 
   useEffect(() => {
     const fetchChatFromUrl = async () => {
-      await takeToken();
+      refreshToken();
       const urlParams = new URLSearchParams(window.location.search);
       const chatIdFromUrl = urlParams.get('id');
       const pathSegments = window.location.pathname.split('/');
@@ -284,12 +290,12 @@ const Chat = () => {
     if (isLoaded && userId) {
       fetchChatFromUrl();
     }
-  }, [isLoaded, userId, navigate]);
+  }, [isLoaded, userId, navigate,token]);
   
-  useEffect(async ()=> {
-    await takeToken();
+  useEffect(() => {
+    refreshToken();
     getchats();
-  }, []);
+  }, [token]);
 
   if (!isLoaded)
     return (
