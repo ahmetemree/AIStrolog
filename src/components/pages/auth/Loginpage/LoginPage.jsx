@@ -6,7 +6,7 @@ const LoginPage = () => {
   const { redirect, setRedirect } = useRedirectContext();
   return (
     <div className='loginpage'>
-         <SignIn path="/login" signUpUrl='/signup' forceRedirectUrl={`/${redirect}`} appearance={{}}/>
+         <SignIn path="/login" signUpUrl='/signup' forceRedirectUrl={`/${redirect}`} appearance={{}} />
     </div>
   )
 }

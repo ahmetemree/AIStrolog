@@ -7,9 +7,11 @@ import {
   UserButton
 } from '@clerk/clerk-react';
 import { useMyContext } from '../../context/Context';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { TbZodiacCancer } from 'react-icons/tb';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { eSelected, setESelected } = useMyContext();
   const toggleMenu = () => {
@@ -42,38 +44,54 @@ const Navbar = () => {
           <img src="/hamburger.png" alt="" />
         </div>
         <div className="logo">
-          <Link to={'/'} type='a'>
+          <Link to={'/'} type="a">
             <img src="/logo.png" alt="Logo" />
             <div className="text">
               <span>AIStrolog</span>
             </div>
           </Link>
-        
         </div>
         <div className={`options ${isMenuOpen ? 'active' : ''}`}>
-          <Link to={'/'} type='a' className='home' onClick={closeMenu}>
+          <Link to={'/'} type="a" className="home" onClick={closeMenu}>
             <img src="/home.png" alt="Home" />
-              <span>{eSelected ? 'Home' : 'Anasayfa'}</span>
+            <span>{eSelected ? 'Home' : 'Anasayfa'}</span>
           </Link>
-          
-          <Link to={'/dashboard'} type='a' className='dashboard' onClick={closeMenu}>
-          <img src="/dashboard.png" alt="Dashboard" />
 
-          <span>{eSelected ? 'Dashboard' : 'Kontrol Paneli'}</span>
-          
+          <Link
+            to={'/dashboard'}
+            type="a"
+            className="dashboard"
+            onClick={closeMenu}
+          >
+            <img src="/dashboard.png" alt="Dashboard" />
+
+            <span>{eSelected ? 'Dashboard' : 'Kontrol Paneli'}</span>
           </Link>
-          
-          <Link to={'/chat'} type='a' className='chat' onClick={closeMenu}>
-          
+
+          <Link to={'/chat'} type="a" className="chat" onClick={closeMenu}>
             <img src="/chat.png" alt="Chat" />
-              <span>{eSelected ? 'Chat' : 'Mesaj'}</span>
+            <span>{eSelected ? 'Chat' : 'Mesaj'}</span>
           </Link>
-          
-          <Link to={'/analysis'} type='a' className='analysis' onClick={closeMenu}>
+
+          <Link
+            to={'/analysis'}
+            type="a"
+            className="analysis"
+            onClick={closeMenu}
+          >
             <img src="/analysis.png" alt="Analysis" />
-              <span>{eSelected ? 'Analysis' : 'Analiz'}</span>
+            <span>{eSelected ? 'Analysis' : 'Analiz'}</span>
           </Link>
-          
+
+          <Link
+            to={'/subscriptions'}
+            type="a"
+            className="subscription"
+            onClick={closeMenu}
+          >
+            <img src="/subscription.png" alt="Subscriptions" />
+            <span>{eSelected ? 'Subscriptions' : 'Abonelikler'}</span>
+          </Link>
         </div>
         <div className="auth">
           <div className="languages">
@@ -98,7 +116,15 @@ const Navbar = () => {
             </a>
             <a href="/signup">
               <SignedIn>
-                <UserButton />
+                <UserButton>
+                  <UserButton.MenuItems>
+                    <UserButton.Action
+                      label="Subscriptions"
+                      labelIcon={<TbZodiacCancer />}
+                      onClick={() => navigate('/subscriptions')}
+                    />
+                  </UserButton.MenuItems>
+                </UserButton>
               </SignedIn>
             </a>
           </div>

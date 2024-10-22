@@ -7,6 +7,8 @@ import DashboardPage from './components/pages/dashboard/DashboardPage.jsx';
 import Privacy from './components/pages/privacy&policy/Privacy.jsx';
 import Chat from './components/pages/chat/chat/Chat.jsx';
 import Analysis from './components/pages/Analysis/Analysis.jsx';
+import Subscriptions from './components/pages/subscriptions/Subscriptions.jsx';
+import Contact from './components/pages/contact/Contact.jsx';
 
 const router = createBrowserRouter([
   {
@@ -39,11 +41,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/contact',
-        element: <Chat />,
+        element: <Contact />,
       },
       {
         path: '/analysis',
         element: <Analysis />,
+      },
+      {
+        path: '/subscriptions',
+        element: <Subscriptions />,
       },
     ]
   }
