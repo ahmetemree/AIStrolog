@@ -103,6 +103,7 @@ const Chat = () => {
     if (!isInitial) setQuestion(text);
     if(!firstMessage){
       await updateChat("user",[{text:text}],currentChatId);
+      getChatHistory(currentChatId);
     }
     
     try {
@@ -299,6 +300,8 @@ const Chat = () => {
         setIsMessageExist(true);
         setChatId(chatIdFromPath);
         await getChatHistory(chatIdFromPath);
+        setFirstMessage(false);
+        
       }
       if (chatIdFromUrl) {
         setIsMessageExist(true);
