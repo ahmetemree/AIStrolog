@@ -57,9 +57,10 @@ const Chat = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
     }
   };
+  
 
   useEffect(() => {
-    scrollToBottom();
+    
   }, [chatHistory, answer]);
 
   const chat = model.startChat({
@@ -88,6 +89,7 @@ const Chat = () => {
   }
 
   const add = async (text, isInitial,generatedchatId) => {
+    
     refreshToken();
     setHandleAnswer(true);
     
@@ -105,7 +107,10 @@ const Chat = () => {
       await updateChat("user",[{text:text}],currentChatId);
       getChatHistory(currentChatId);
     }
-    
+    // Mesaj gönderilmeden önce scroll yapma
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     try {
       
       let dots = '.';
@@ -113,7 +118,7 @@ const Chat = () => {
         dots = dots.length < 3 ? dots + '.' : '.';
         setAnswer('' + dots);
       }, 500);
-
+      
       const result = await chat.sendMessage(text);
       clearInterval(animateDots);
       setIsTyping(false);
@@ -131,7 +136,11 @@ const Chat = () => {
         }
         displayedAnswer += '\n';
         setAnswer(displayedAnswer);
-        scrollToBottom();
+        
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        
         await new Promise(resolve => setTimeout(resolve, 100)); // Satır sonu beklemesi
       }
       refreshToken();
@@ -151,6 +160,12 @@ const Chat = () => {
 
   const handleSendMessage = async () => {
     refreshToken();
+    // Mesaj gönderildikten sonra en aşağıya kaydırma
+    setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
     if (loading) return;
     setIsMessageExist(true);
     let newChatId ="";

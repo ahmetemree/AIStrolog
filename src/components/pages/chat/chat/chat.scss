@@ -132,7 +132,7 @@
             height: 100%;
             padding-top: 20px; // Eklendi: Üstten biraz boşluk bırakmak için
             .usermessages {
-                
+                margin-top: 10px;
                 margin-right: 10px;
                 align-self: flex-end;
                 
@@ -168,11 +168,12 @@
                 flex-direction: column;
                 opacity: 0.5;
                 gap: 50px;
+                margin: 5px;
             }
             .usermessage{
                 margin-right: 10px;
                 align-self: flex-end;
-                
+                margin: 5px;
                 gap: 10px;
                 // width: 100%;
                 background-color: #A594F9;
