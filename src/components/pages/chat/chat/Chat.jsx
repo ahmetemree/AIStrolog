@@ -357,9 +357,11 @@ const Chat = () => {
           chats.map(chat => (
             <div key={chat.chats._id} className="chatwrapper" onClick={()=>setFirstMessage(false)}>
               <span
-                onClick={() =>
-                  
-                  getChatHistory(chat.chats[0]._id,refreshToken(), setIsMessageExist(true),setChatId(chat.chats[0]._id))
+                onClick={async () =>
+                {
+                  await refreshToken();
+                  getChatHistory(chat.chats[0]._id, setIsMessageExist(true),setChatId(chat.chats[0]._id))
+                }
                 }
               >
                 {chat.chats[0].title}
@@ -367,7 +369,8 @@ const Chat = () => {
               <img
                 src="/delete.png"
                 alt=""
-                onClick={() => {
+                onClick={async () => {
+                  await refreshToken();
                   handleDeleteChat(chat.chats[0]._id);
                   getChatHistory(chats[chats.length - 2]?.chats[0]._id);
                 }}
