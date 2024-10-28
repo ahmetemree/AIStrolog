@@ -1,6 +1,6 @@
 import { Loader } from '@mantine/core';
 import './chat.scss';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { ClerkProvider, useAuth, useClerk, useUser } from '@clerk/clerk-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRedirectContext } from '../../../../context/RedirectContext';
@@ -9,7 +9,7 @@ import model from '../../../../lib/gemini';
 const Chat = () => {
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
-  const { userId, isLoaded, getToken, isSignedIn } = useAuth();
+  const { userId, isLoaded, getToken, isSignedIn } = useAuth({template: 'tokennn'});
   
   useEffect(() => {
     if (isLoaded && userId) {
@@ -39,10 +39,7 @@ const Chat = () => {
 
   const refreshToken = async () => {
     if (isSignedIn) {
-      const newToken = await getToken({
-        sessionMaxDurationInSeconds: 7 * 24 * 60 * 60, // 7 gün
-        tokenMaxDurationInSeconds: 24 * 60 * 60 // 24 saat
-      });
+      const newToken = await getToken({template: 'aistrolog-template'});
       setUserToken(newToken);
       
     }
