@@ -357,7 +357,8 @@ const Chat = () => {
             <div key={chat.chats._id} className="chatwrapper" onClick={()=>setFirstMessage(false)}>
               <span
                 onClick={() =>
-                  getChatHistory(chat.chats[0]._id, setIsMessageExist(true),setChatId(chat.chats[0]._id))
+                  
+                  getChatHistory(chat.chats[0]._id,refreshToken(), setIsMessageExist(true),setChatId(chat.chats[0]._id))
                 }
               >
                 {chat.chats[0].title}
