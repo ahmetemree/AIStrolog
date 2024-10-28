@@ -39,16 +39,42 @@ const Chat = () => {
 
   const refreshToken = async () => {
     if (isSignedIn) {
-      const newToken = await getToken();
-      setUserToken(newToken);
-      
+      try {
+        const newToken = await getToken();
+        setUserToken(newToken);
+      } catch (error) {
+        console.error('Token yenileme hatası:', error);
+        navigate('/login');
+      }
     }
   };
+
+  const makeApiRequest = async (url, options) => {
+    try {
+      await refreshToken();
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      
+      if (response.status === 401) {
+        navigate('/login');
+        return null;
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('API isteği hatası:', error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
-
     refreshToken();
-    const intervalId = setInterval(refreshToken, 50 * 60 * 1000); // Her 5 dakikada bir yenile
-
+    const intervalId = setInterval(refreshToken, 45 * 60 * 1000);
     return () => clearInterval(intervalId);
   }, [isSignedIn, getToken]);
 
@@ -188,46 +214,51 @@ const Chat = () => {
     }
   };
 
-  const updateChat = async (role,parts,generatedchatId) => {
-    refreshToken();
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      credentials: 'include',
-      body: JSON.stringify({ role:role,parts:parts ,chatId:generatedchatId})
-    });
-    const data = await response.json();
-  }
+  const updateChat = async (role, parts, generatedchatId) => {
+    const response = await makeApiRequest(
+      `${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ role, parts, chatId: generatedchatId })
+      }
+    );
+    if (response) {
+      return await response.json();
+    }
+  };
 
   const createNewChat = async () => {
-    refreshToken();
     const generatedChatId = Date.now().toString();
-       
     const title = inputRef.current ? inputRef.current.value.slice(0, 10) : '';
     const history = [
       { role: 'user', parts: [{ text: inputRef.current.value }] }
     ];
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/createchat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        credentials: 'include',
-        body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
-      });
+      const response = await makeApiRequest(
+        `${import.meta.env.VITE_BACKEND_URL}/createchat`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ userId, chatId: generatedChatId, title, history })
+        }
+      );
+
+      if (!response) return;
 
       if (!response.ok) {
         throw new Error('Yeni sohbet oluşturulamadı');
       }
       
       setChatId(generatedChatId);
-      getChatHistory(generatedChatId);
+      await getChatHistory(generatedChatId);
       setChats(prevChats => [...prevChats, { chats: [{ _id: generatedChatId, title }] }]);
       return generatedChatId;
     } catch (error) {
@@ -237,37 +268,43 @@ const Chat = () => {
   };
 
   const getChatHistory = async (generatedchatId) => {
-    refreshToken();
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      credentials: 'include',
-      body: JSON.stringify({ chatId })
-    });
+    const response = await makeApiRequest(
+      `${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ chatId })
+      }
+    );
 
-    const data = await response.json();
-    await setChatHistory(data.history);
+    if (response) {
+      const data = await response.json();
+      await setChatHistory(data.history);
+    }
   };
 
   const handleDeleteChat = async chatId => {
-      try {
-      const response = await fetch(
+    try {
+      const response = await makeApiRequest(
         `${import.meta.env.VITE_BACKEND_URL}/deletechat/${chatId}`,
         {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
           },
           credentials: 'include',
         }
       );
+
+      if (!response) return;
+
       if (!response.ok) {
         throw new Error('Sohbet silinemedi');
       }
+
       const data = await response.json();
       setChats(data);
     } catch (error) {
@@ -276,17 +313,19 @@ const Chat = () => {
   };
 
   const getchats = async () => {
-    refreshToken();
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        credentials: 'include',
-        
-      });
+      const response = await makeApiRequest(
+        `${import.meta.env.VITE_BACKEND_URL}/getchats`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        }
+      );
+
+      if (!response) return;
 
       if (!response.ok) {
         throw new Error('Sohbetler alınamadı');
