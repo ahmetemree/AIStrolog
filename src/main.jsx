@@ -6,7 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import App from './App';
 
 import './style.scss';
-import { ClerkProvider } from '@clerk/clerk-react';
+import { ClerkProvider, GoogleOneTap } from '@clerk/clerk-react';
 import { shadesOfPurple } from '@clerk/themes';
 import { MantineProvider } from '@mantine/core';
 // Mantine CSS'ini import et
@@ -28,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         baseTheme: shadesOfPurple
       }}
     >
+      <GoogleOneTap />
       <MantineProvider>
         <MyContextProvider>
           <RedirectContextProvider>
