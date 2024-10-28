@@ -39,7 +39,10 @@ const Chat = () => {
 
   const refreshToken = async () => {
     if (isSignedIn) {
-      const newToken = await getToken();
+      const newToken = await getToken({
+        sessionMaxDurationInSeconds: 7 * 24 * 60 * 60, // 7 gün
+        tokenMaxDurationInSeconds: 24 * 60 * 60 // 24 saat
+      });
       setUserToken(newToken);
       
     }
@@ -47,7 +50,7 @@ const Chat = () => {
   useEffect(() => {
 
     refreshToken();
-    const intervalId = setInterval(refreshToken, 50 * 60 * 1000); // Her 5 dakikada bir yenile
+    const intervalId = setInterval(refreshToken, 12 * 60 * 60 * 1000); // Her 12 saatte bir yenile
 
     return () => clearInterval(intervalId);
   }, [isSignedIn, getToken]);
