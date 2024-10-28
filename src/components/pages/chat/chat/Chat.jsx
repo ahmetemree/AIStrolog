@@ -40,9 +40,7 @@ const Chat = () => {
   const refreshToken = async () => {
     if (isSignedIn) {
       const newToken = await getToken();
-      setImmediate(() => {
-        setUserToken(newToken);
-      });
+      setUserToken(newToken);
       
     }
   };
