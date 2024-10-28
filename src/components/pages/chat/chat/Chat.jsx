@@ -146,6 +146,7 @@ const Chat = () => {
       }
       refreshToken();
       setIsTyping(false);
+      await refreshToken();
       await updateChat("model", [{ text: displayedAnswer }], currentChatId);
       await getChatHistory(currentChatId);
       setHandleAnswer(false);
