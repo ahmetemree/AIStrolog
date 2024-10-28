@@ -130,6 +130,7 @@ const Chat = () => {
       setIsTyping(true);
       for (let line of lines) {
         for (let char of line) {
+          refreshToken();
           displayedAnswer += char;
           setAnswer(displayedAnswer);
           await new Promise(resolve => setTimeout(resolve, 20));
