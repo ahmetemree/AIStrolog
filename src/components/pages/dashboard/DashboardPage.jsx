@@ -21,7 +21,10 @@ const DashboardPage = () => {
   const { user } = useUser();
   const { userId, isLoaded, getToken, isSignedIn } = useAuth();
   const [token, setUserToken] = useState("");
-
+  const [birthday, setBirthday] = useState("");
+  console.log("user is", user);
+  console.log("user birthday is", user?.birthday);
+  
   useEffect(() => {
     const fetchToken = async () => {
       if (isSignedIn) {
@@ -179,6 +182,7 @@ const DashboardPage = () => {
             ) : (
               <>
                 Hoşgeldin <br /> {user?.fullName}
+                
               </>
             )}
           </motion.h1>

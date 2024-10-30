@@ -67,6 +67,11 @@
                     padding: 10px 20px;
                     font-size: 16px;
                     cursor: pointer;
+                    transition: all 0.3s ease;
+                    &:hover{
+                        background-color: #7060e7;
+                        scale: 1.05;
+                    }
                     @media (max-width: 1024px) {
                         padding: 5px 10px;
                         font-size: 12px;
