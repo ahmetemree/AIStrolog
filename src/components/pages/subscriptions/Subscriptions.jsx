@@ -8,9 +8,10 @@ const Subscriptions = () => {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [startingOption, setStartingOption] = useState(2);
   const data = [
     { 
-      option: '10% İndirim', 
+      option: 'Ücretsiz 3 Kredi', 
       style: { 
         backgroundColor: '#ff8f43', 
         textColor: 'white',
@@ -18,7 +19,7 @@ const Subscriptions = () => {
       } 
     },
     { 
-      option: '20% İndirim', 
+      option: 'Ücretsiz 5 Kredi', 
       style: { 
         backgroundColor: '#70bbe0', 
         textColor: 'white',
@@ -26,7 +27,7 @@ const Subscriptions = () => {
       } 
     },
     { 
-      option: '5% İndirim', 
+      option: 'AI-Strolog Plus %10 İndirim', 
       style: { 
         backgroundColor: '#ff5252', 
         textColor: 'white',
@@ -34,18 +35,29 @@ const Subscriptions = () => {
       } 
     },
     { 
-      option: 'Bedava Ay', 
+      option: 'AI-Strolog Premium %20 İndirim', 
+      style: { 
+        backgroundColor: '#ff8f43', 
+        textColor: 'white',
+        textPosition: 'horizontal'
+      } 
+    },
+    { 
+      option: 'AI-Strolog Premium %15 İndirim', 
       style: { 
         backgroundColor: '#4caf50', 
         textColor: 'white',
         textPosition: 'horizontal'
       } 
     },
+    
   ];
 
   const handleSpinClick = () => {
     if (!mustSpin) {
       const newPrizeNumber = Math.floor(Math.random() * data.length);
+      console.log("newPrizeNumber", newPrizeNumber);
+      
       setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
     }
@@ -57,9 +69,22 @@ const Subscriptions = () => {
       <div className="plans">
         <div className="plan1">
           <h3>AI-Strolog Free</h3>
-          <button>Subscribe</button>
+
+          <div className="list">
+            <ul>
+              <li>Haftalık ücretsiz 3 kredi mesaj hakkı</li>
+              <li>Her hafta ücretsiz çark çevirme hakkı</li>
+              <li>Reklam izleyerek kredi kazanın</li>
+              <li>Kredi kullanımı sınırlıdır</li>
+            </ul>
+          </div>
+          <div className="buttonwrapper">
+          <button>Choose Plan</button>
+          <button onClick={open}>Çark Çevir</button>
+          </div>
           <Modal 
             opened={opened} 
+            
             onClose={close} 
             title="Çark Çevir" 
             size="lg"
@@ -68,6 +93,7 @@ const Subscriptions = () => {
               
               inner: { padding: '40px' },
               content: { 
+                
                 minHeight: '600px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -89,8 +115,8 @@ const Subscriptions = () => {
               prizeNumber={prizeNumber}
               data={data}
               spinDuration={0.5}
-              startingOptionIndex={2}
-              disableInitialAnimation={true}
+              startingOptionIndex={startingOption}
+              disableInitialAnimation={false}
               radiusLineWidth={1}
               radiusLineColor="white" 
               outerBorderWidth={3}
@@ -99,11 +125,12 @@ const Subscriptions = () => {
               innerBorderWidth={2}
               innerRadius={10}
               textDistance={60}
-              fontSize={16}
+              fontSize={10}
               numberOfSpins={10}
               rotationTime={0.8}
               onStopSpinning={() => {
                 setFinished(true);
+                setStartingOption(prizeNumber);
                 setTimeout(() => {
                   setMustSpin(false);
                   console.log(data[prizeNumber].option);
@@ -111,18 +138,20 @@ const Subscriptions = () => {
               }}
             />
             <Button 
-              onClick={handleSpinClick} 
+              onClick={()=>{handleSpinClick(); setFinished(false);}} 
               disabled={mustSpin} 
               style={{ marginTop: '30px' }}
               size="lg"
+
             >
               {mustSpin ? 'Çark Dönüyor...' : 'Çarkı Çevir!'}
             </Button>
-            {finished && <span title="We notify you that">
-              {data[prizeNumber].option}
+            
+            {finished && <span title="We notify you that" style={{display: 'block', fontSize: '20px', fontWeight: 'bold', color: '#4caf50',marginTop: '20px', textAlign: 'center'}}>
+              Tebrikler! {data[prizeNumber].option} Kazandınız!
             </span>}
           </Modal>
-          <button onClick={open}>Çark Çevir</button>
+          
         </div>
         <div className="plan2">
           <h3>AI-Strolog Plus</h3>

@@ -30,8 +30,10 @@
         gap: 20px;
         .plan1{
             display: flex;
-            align-items: flex-start;
-            justify-content: center;
+            align-items: center;
+            justify-content: flex-start;
+            flex-direction: column;
+            gap: 20px;
             width: 30%;
             height: 90%;
             border: 3px solid #A594F9;
@@ -40,6 +42,39 @@
                 margin-top: 20px;
                 width: 80%;
             }
+
+            .list{
+                flex:2;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                color: #7060e7;
+                font-size: 18px;
+                @media (max-width: 1024px) {
+                    font-size: 12px;
+                }
+            }
+
+            .buttonwrapper{
+                display: flex;
+                gap: 20px;
+                margin-bottom: 20px;
+                button{
+                    background-color: #A594F9;
+                    color: white;
+                    border: none;
+                    border-radius: 50px;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    @media (max-width: 1024px) {
+                        padding: 5px 10px;
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            
         }
         .plan2{
             display: flex;
