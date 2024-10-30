@@ -10,6 +10,7 @@ import Analysis from './components/pages/Analysis/Analysis.jsx';
 import Subscriptions from './components/pages/subscriptions/Subscriptions.jsx';
 import Contact from './components/pages/contact/Contact.jsx';
 import RedirectSignupPage from './components/pages/redirect_sign_up_page/redirect_signup_page.jsx';
+import UserInformations from './components/pages/userInformations/UserInformations.jsx';
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: '/login/sso-callback',
         element: <RedirectSignupPage />,
+      },
+      {
+        path: '/user-informations',
+        element: <UserInformations />,
       },
     ]
   }

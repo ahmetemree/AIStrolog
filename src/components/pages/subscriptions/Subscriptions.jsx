@@ -56,7 +56,6 @@ const Subscriptions = () => {
   const handleSpinClick = () => {
     if (!mustSpin) {
       const newPrizeNumber = Math.floor(Math.random() * data.length);
-      console.log("newPrizeNumber", newPrizeNumber);
       
       setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
@@ -133,7 +132,6 @@ const Subscriptions = () => {
                 setStartingOption(prizeNumber);
                 setTimeout(() => {
                   setMustSpin(false);
-                  console.log(data[prizeNumber].option);
                 }, 1000);
               }}
             />

@@ -4,7 +4,6 @@ import './aipreview.scss';
 
 const AiPreview = ({ chats }) => {
   const { eSelected, setESelected } = useMyContext();
-  console.log(chats);
   return (
     <div className="aipreview">
       <div className="header">
