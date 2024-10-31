@@ -8,7 +8,7 @@ import {
 } from '@clerk/clerk-react';
 import { useMyContext } from '../../context/Context';
 import { Link, useNavigate } from 'react-router-dom';
-import { TbZodiacCancer } from 'react-icons/tb';
+import { TbUser, TbZodiacCancer } from 'react-icons/tb';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -122,6 +122,13 @@ const Navbar = () => {
                       label="Subscriptions"
                       labelIcon={<TbZodiacCancer />}
                       onClick={() => navigate('/subscriptions')}
+                    />
+                  </UserButton.MenuItems>
+                  <UserButton.MenuItems>
+                    <UserButton.Action
+                      label="User Informations"
+                      labelIcon={<TbUser />}
+                      onClick={() => navigate('/user-informations')}
                     />
                   </UserButton.MenuItems>
                 </UserButton>
