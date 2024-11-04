@@ -22,7 +22,7 @@ const DashboardPage = () => {
   const { userId, isLoaded, getToken, isSignedIn } = useAuth();
   const [token, setUserToken] = useState("");
   const [birthday, setBirthday] = useState("");
-  
+  const [zodiacSign, setZodiacSign] = useState("");
   
   useEffect(() => {
     const fetchToken = async () => {
@@ -67,15 +67,35 @@ const DashboardPage = () => {
 
     return () => clearInterval(intervalId);
   }, [isSignedIn, getToken]);
-
+  
+useEffect(() => {
+  getUserInformations(token);
+})
 
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/login');
       setRedirect("dashboard")
     }
+    
   }, [isLoaded, userId, navigate]);
 
+  const getUserInformations = async (token) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        setZodiacSign(data.zodiacSign);
+    } catch (error) {
+        console.log(error);
+    }
+    
+}
 
   const getChats = async () => {
     if (!token) {
@@ -207,7 +227,7 @@ const DashboardPage = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.0 }}
           >
-            {eSelected ? "Your zodiac sign: Pisces" : "Burcunuz: Balık"}
+            {eSelected ? `Your zodiac sign: ${zodiacSign}` : `Burcunuz: ${zodiacSign}`}
           </motion.h1>
           <div className="aitext">
             <img src="./ai.png" alt="" />

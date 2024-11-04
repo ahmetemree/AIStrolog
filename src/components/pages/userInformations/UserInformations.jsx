@@ -15,20 +15,19 @@ const UserInformations = () => {
     const [birthdate, setBirthdate] = useState("");
     const [birthtime, setBirthtime] = useState("");
     const [isFirstTime, setIsFirstTime] = useState(true);
-    const [zodiacSign, setZodiacSign] = useState("");
-    console.log(isFirstTime,"isFirstTime");
+    let zodiacSign = "";
     
     const handleSubmit = async (e) => {
         e.preventDefault();
         await refreshToken();
-        findZodiacSign();
+        const zodiacReturned = findZodiacSign();
         createUser();
     }
 
-    const findZodiacSign = () => {
+    const findZodiacSign = async () => {
         const birthDate = birthdateRef.current.value;
         const [month, day] = birthDate.split('-').slice(1).map(Number);
-        let zodiacSign = '';
+        
 
         if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) {
             zodiacSign = 'Koç';
@@ -53,9 +52,10 @@ const UserInformations = () => {
         } else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) {
             zodiacSign = 'Kova';
         } else {
-            zodiacSign = 'Balık';
+            zodiacSign = 'Balık!';
         }
-        setZodiacSign(zodiacSign);
+        // setZodiacSign(zodiacSign);
+        return zodiacSign
     }
 
     useEffect(() => {
@@ -105,7 +105,7 @@ const UserInformations = () => {
     }
 
     const createUser = async () => {
-        console.log(zodiacSign,"zodiacSign");
+        console.log(zodiacSign,"zodiacSignaaa");
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/createuser`, {
                 method: 'POST',
@@ -118,7 +118,8 @@ const UserInformations = () => {
                     birthDate: birthdateRef.current.value, 
                     birthTime: birthtimeRef.current.value,
                     email: user.emailAddresses[0].emailAddress,
-                    zodiacSign: zodiacSign,
+                    zodiacSign : zodiacSign,
+                    subscription: "free",
 
                 })
             });
@@ -148,7 +149,7 @@ const UserInformations = () => {
                 <h1>Hadi burç analizin için gerekli bilgilerini girelim!</h1>
                 <div className="userinformations-content">
                     <form>
-                        <input type="text" placeholder="Adınızı giriniz" ref={nameRef} value={name}/>
+                        <input type="text" placeholder="Adınızı giriniz" ref={nameRef} defaultValue={name}/>
                         <input type="date" placeholder="Doğum tarihinizi giriniz" ref={birthdateRef} defaultValue={isFirstTime ? "" : birthdate}/>
                         <input type="time" placeholder="Doğum saatinizi giriniz" ref={birthtimeRef} defaultValue={isFirstTime ? "" : birthtime}/>
                         <button type="submit" onClick={handleSubmit}>Onayla!</button>

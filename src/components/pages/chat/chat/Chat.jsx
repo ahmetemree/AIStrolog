@@ -30,6 +30,7 @@ const Chat = () => {
   const [firstMessage, setFirstMessage] = useState(true);
   const answerRef = useRef(null);
   const [handleAnswer,setHandleAnswer] = useState(false);
+  const [stop,setStop] = useState(false);
   
   
   const [loading, setLoading] = useState(false);
@@ -124,11 +125,14 @@ const Chat = () => {
       setIsTyping(false);
 
       const response = result.response.text();
+      const formattedResponse = response.replace(/\*\*(.*?)\*\*/g, '\n$1\n');
+      
       let displayedAnswer = '';
-      const lines = response.split('\n');
+      const lines = formattedResponse.split('\n');
 
       setIsTyping(true);
       for (let line of lines) {
+        if(!stop){
         for (let char of line) {
           refreshToken();
           displayedAnswer += char;
@@ -143,6 +147,7 @@ const Chat = () => {
         }
         
         await new Promise(resolve => setTimeout(resolve, 100)); // Satır sonu beklemesi
+      }
       }
       refreshToken();
       setIsTyping(false);
