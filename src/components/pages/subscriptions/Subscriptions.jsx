@@ -220,7 +220,7 @@ const Subscriptions = () => {
               <li>Kredi kullanımı sınırlıdır</li>
             </ul>
           </div>
-          <span className='charge'>1.99$</span>
+          <span className='charge'>$1.99</span>
           <div className="buttonwrapper">
             {isSignedIn && subscription === 'plus' && <button>Reklam İzle</button>}
             {isSignedIn && subscription === 'plus' && <button onClick={open}>Çark Çevir</button>}
@@ -236,7 +236,7 @@ const Subscriptions = () => {
               <li>Premium'a özel hediyeler!</li>
             </ul>
           </div>
-          <span className='charge'>3.99$</span>
+          <span className='charge'>$3.99</span>
           <div className="buttonwrapper">
             {isSignedIn && subscription === 'premium' && <button>Çekilişe Katıl</button>}
             {isSignedIn && subscription === 'premium' && <button onClick={open}>Çark Çevir</button>}
