@@ -10,6 +10,22 @@
     @media screen and (max-width: 1130px) {
         flex-direction: column;
     }
+    
+    .credits{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50px;
+        margin-top: 5px;
+        padding: 20px;
+        height: 30px;
+        margin-bottom: 5px;
+        background-color: #A594F9;
+        span{
+            font-size: 15px;
+            color: white;
+        }
+    }
     .lastchats{
         flex: 1;
         height: 100%;

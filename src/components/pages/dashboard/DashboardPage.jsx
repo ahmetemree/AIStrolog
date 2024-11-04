@@ -9,21 +9,15 @@ import { motion } from 'framer-motion';
 import { useMyContext } from '../../../context/Context';
 import { useRedirectContext } from '../../../context/RedirectContext';
 
-
-
-
 const DashboardPage = () => {
-
-  
-  
   const { eSelected, setESelected } = useMyContext();
   const { redirect, setRedirect } = useRedirectContext();
   const { user } = useUser();
   const { userId, isLoaded, getToken, isSignedIn } = useAuth();
-  const [token, setUserToken] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [zodiacSign, setZodiacSign] = useState("");
-  
+  const [token, setUserToken] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [zodiacSign, setZodiacSign] = useState('');
+
   useEffect(() => {
     const fetchToken = async () => {
       if (isSignedIn) {
@@ -31,7 +25,7 @@ const DashboardPage = () => {
           const newToken = await getToken();
           setUserToken(newToken);
         } catch (error) {
-          console.error("Token alınamadı:", error);
+          console.error('Token alınamadı:', error);
         }
       }
     };
@@ -46,17 +40,17 @@ const DashboardPage = () => {
   }, [isLoaded, userId, token]);
 
   const navigate = useNavigate();
-  
+
   const [singleChat, setSingleChat] = useState([]);
-  const [singleChatId, setSingleChatId] = useState("");
-  
+  const [singleChatId, setSingleChatId] = useState('');
+
   const refreshToken = async () => {
     if (isSignedIn) {
       try {
         const newToken = await getToken();
         setUserToken(newToken);
       } catch (error) {
-        console.error("Token yenilenemedi:", error);
+        console.error('Token yenilenemedi:', error);
       }
     }
   };
@@ -67,51 +61,56 @@ const DashboardPage = () => {
 
     return () => clearInterval(intervalId);
   }, [isSignedIn, getToken]);
-  
-useEffect(() => {
-  getUserInformations(token);
-})
+
+  useEffect(() => {
+    getUserInformations(token);
+  });
 
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/login');
-      setRedirect("dashboard")
+      setRedirect('dashboard');
     }
-    
   }, [isLoaded, userId, navigate]);
 
-  const getUserInformations = async (token) => {
+  const getUserInformations = async token => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-        const data = await response.json();
-        setZodiacSign(data.zodiacSign);
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      setZodiacSign(data.zodiacSign);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-    
-}
+  };
 
   const getChats = async () => {
     if (!token) {
-      console.error("Token bulunamadı");
+      console.error('Token bulunamadı');
       return;
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchats`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/getchats`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          credentials: 'include'
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,26 +122,29 @@ useEffect(() => {
         getSingleChat(data[data.length - 1].chats[0]._id);
       }
     } catch (error) {
-      console.error("Sohbetler alınamadı:", error);
+      console.error('Sohbetler alınamadı:', error);
     }
-  }
+  };
 
-  const getSingleChat = async (chatId) => {
+  const getSingleChat = async chatId => {
     if (!token) {
-      console.error("Token bulunamadı");
+      console.error('Token bulunamadı');
       return;
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        credentials: 'include',
-        body: JSON.stringify({ chatId })
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          credentials: 'include',
+          body: JSON.stringify({ chatId })
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -151,9 +153,9 @@ useEffect(() => {
       const data = await response.json();
       setSingleChat(data);
     } catch (error) {
-      console.error("Tek sohbet alınamadı:", error);
+      console.error('Tek sohbet alınamadı:', error);
     }
-  }
+  };
 
   useEffect(() => {
     if (token) {
@@ -192,7 +194,7 @@ useEffect(() => {
             initial={{ opacity: 0, x: -250 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.0 }}
-            className='welcome'
+            className="welcome"
           >
             {eSelected ? (
               <>
@@ -201,7 +203,6 @@ useEffect(() => {
             ) : (
               <>
                 Hoşgeldin <br /> {user?.fullName}
-                
               </>
             )}
           </motion.h1>
@@ -227,26 +228,32 @@ useEffect(() => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.0 }}
           >
-            {eSelected ? `Your zodiac sign: ${zodiacSign}` : `Burcunuz: ${zodiacSign}`}
+            {eSelected
+              ? `Your zodiac sign: ${zodiacSign}`
+              : `Burcunuz: ${zodiacSign}`}
           </motion.h1>
           <div className="aitext">
             <img src="./ai.png" alt="" />
             <h3>
-              { eSelected ? "I hope you're having a great day. Here are some suggestions for you:" : "Umarım güzel bir gün geçiriyorsundur. İşte senin için bazı önerilerim:"}
+              {eSelected
+                ? "I hope you're having a great day. Here are some suggestions for you:"
+                : 'Umarım güzel bir gün geçiriyorsundur. İşte senin için bazı önerilerim:'}
             </h3>
           </div>
-          <span >{eSelected ? "Go to your last conversation with the AI." :"Yapay zeka ile son sohbetine git:"}</span>
+          <span>
+            {eSelected
+              ? 'Go to your last conversation with the AI.'
+              : 'Yapay zeka ile son sohbetine git:'}
+          </span>
           <AiPreview chats={singleChat} />
-          <span>{eSelected ? "Or" : "Ya da"}</span>
-          <div className="buttonwrapper" >
+          <span>{eSelected ? 'Or' : 'Ya da'}</span>
+          <div className="buttonwrapper">
             <Link to={'/chat'}>
-            
-            <button>
-              <img src="./newmessage.png" alt="" />
-              {eSelected ? "Create New Message" : "Yeni Mesaj Oluştur"}
-            </button>
+              <button>
+                <img src="./newmessage.png" alt="" />
+                {eSelected ? 'Create New Message' : 'Yeni Mesaj Oluştur'}
+              </button>
             </Link>
-            
           </div>
         </motion.div>
       </div>

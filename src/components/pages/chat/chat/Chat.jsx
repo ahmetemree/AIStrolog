@@ -1,10 +1,11 @@
-import { Loader } from '@mantine/core';
+import { Loader, Notification } from '@mantine/core';
 import './chat.scss';
 import { ClerkProvider, useAuth, useClerk, useUser } from '@clerk/clerk-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRedirectContext } from '../../../../context/RedirectContext';
 import model from '../../../../lib/gemini';
+import { notifications } from '@mantine/notifications';
 
 const Chat = () => {
   const { redirect, setRedirect } = useRedirectContext();
@@ -31,18 +32,41 @@ const Chat = () => {
   const answerRef = useRef(null);
   const [handleAnswer,setHandleAnswer] = useState(false);
   const [stop,setStop] = useState(false);
-  
+  const [credits,setCredits] = useState(0);
   
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const [token, setUserToken] = useState("");
-
+ 
   const refreshToken = async () => {
     if (isSignedIn) {
       const newToken = await getToken({template: 'aistrolog-template'});
       setUserToken(newToken);
       
+    }
+  };
+
+  useEffect(() => {
+    getUserInformations(token);
+  });
+
+  const getUserInformations = async token => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const data = await response.json();
+      setCredits(data.credits);
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -165,9 +189,33 @@ const Chat = () => {
     setLoading(false);
   };
 
+  const decreaseCredits = async () => {
+    await refreshToken();
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatecredits`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ credits: credits - 1 })
+    });
+  }
+
   const handleSendMessage = async () => {
+    if(credits>0){
+      decreaseCredits();
+    }
     refreshToken();
     // Mesaj gönderildikten sonra en aşağıya kaydırma
+    if(credits<=0){
+      notifications.show({
+        title: 'Hata',
+        message: 'Kredi bitti!',
+        color: 'red',
+        position: 'top-right'
+      });
+      throw new Error('Kredi bitti!');
+    }
     setTimeout(() => {
       if (messagesEndRef.current) {
         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -183,6 +231,15 @@ const Chat = () => {
       }
       
       const inputValue = inputRef.current.value;
+      if(inputValue==""){
+        notifications.show({
+          title: 'Hata',
+          message: 'Mesajınızı giriniz!',
+          color: 'red',
+          position: 'top-right'
+        });
+        throw new Error('Mesajınızı giriniz!');
+      }
       inputRef.current.value = '';
       
       setChatHistory(prevHistory => [...prevHistory, { role: 'user', parts: [{ text: inputValue }] }]);
@@ -385,6 +442,9 @@ const Chat = () => {
         )}
       </div>
       <div className="messagecontainer">
+      <div className="credits">
+        <span>Kredi: {credits} Kredi kaldı!</span>
+      </div>
         <div
           className={
             isMessageExist ? 'messageswrapper' : 'firstmessageswrapper'
@@ -423,6 +483,7 @@ const Chat = () => {
           <div className="inputcontainer">
             <input
               type="text"
+              required
               placeholder="Mesajınızı giriniz..."
               ref={inputRef}
               onKeyPress={(e) => {
@@ -431,7 +492,9 @@ const Chat = () => {
                 }
               }}
             />
-            <button onClick={handleSendMessage} ref={buttonRef} disabled={loading}>
+            <button onClick={()=>{
+               handleSendMessage();
+            }} ref={buttonRef} disabled={loading}>
               {loading ? 'Gönderiliyor...' : 'Gönder'}
             </button>
           </div>
