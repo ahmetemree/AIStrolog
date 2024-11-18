@@ -1,19 +1,27 @@
 import './subscriptions.scss';
 import { useDisclosure } from '@mantine/hooks';
 import { Modal, Button, Group } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
 import { useAuth } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
+import { notifications } from '@mantine/notifications';
 const Subscriptions = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [finished, setFinished] = useState(false);
   const [startingOption, setStartingOption] = useState(2);
-  const { isSignedIn } = useAuth();
+  const { isSignedIn,isLoaded } = useAuth();
   const [subscription, setSubscription] = useState('');
   const [token, setUserToken] = useState('');
   const { getToken } = useAuth();
+  const freeButton = useRef(null);
+  const plusButton = useRef(null);
+  const premiumButton = useRef(null);
+  const navigate = useNavigate();
+  const [canWeeklySpin, setCanWeeklySpin] = useState(true);
+
   const data = [
     {
       option: 'Ücretsiz 3 Kredi',
@@ -65,7 +73,7 @@ const Subscriptions = () => {
     const fetchToken = async () => {
       if (isSignedIn) {
         try {
-          const newToken = await getToken();
+          const newToken = await getToken({template:'aistrolog-template'});
           setUserToken(newToken);
         } catch (error) {
           console.error('Token alınamadı:', error);
@@ -76,8 +84,40 @@ const Subscriptions = () => {
     fetchToken();
   }, [isSignedIn, getToken]);
 
+  const handleFreePlan = async () => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatePlan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ subscription: 'free' })
+    });
+    getUserInformations(token);
+  }
+  const handlePlusPlan = async () => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatePlan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ subscription: 'plus', subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() })
+    });
+    getUserInformations(token);
+  }
+  const handlePremiumPlan = async () => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatePlan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ subscription: 'premium', subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() })
+    });
+    getUserInformations(token);
+  }
   
-
   const getUserInformations = async token => {
     try {
       const response = await fetch(
@@ -92,19 +132,40 @@ const Subscriptions = () => {
       );
       const data = await response.json();
       setSubscription(data.subscription);
+      setCanWeeklySpin(data.canWeeklySpin);
       console.log(subscription);
       
     } catch (error) {
       console.log(error);
     }
   };
-
+  const setWeeklySpin = async () => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/weeklySpin`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ canWeeklySpin: false })
+    });
+  }
   const handleSpinClick = () => {
+    getUserInformations(token);
+    if(!canWeeklySpin){
+     notifications.show({
+      title: 'Hata!',
+      message: 'Haftalık çark çevirme hakkınız bitmiştir. Daha fazla haftalık çark çevirme hakkı almak için aylık planınızı yükseltin.',
+      color: 'red'
+     });
+     return;
+    }
     if (!mustSpin) {
       const newPrizeNumber = Math.floor(Math.random() * data.length);
 
       setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
+      setWeeklySpin();
+      getUserInformations(token);
     }
   };
 
@@ -128,7 +189,12 @@ const Subscriptions = () => {
             {isSignedIn && subscription === 'free' && <button>Reklam İzle</button>}
             {isSignedIn && subscription === 'free' && <button onClick={open}>Çark Çevir</button>}
           </div>
-          <button disabled={isSignedIn && subscription === 'free'} className={`${isSignedIn && subscription === 'free' ? 'selected' : 'button'}`}>{isSignedIn && subscription === 'free' ? 'Plan Seçildi!' : 'Planı Seç!'}</button>
+          <button ref={freeButton} disabled={isSignedIn && subscription === 'free'} className={`${isSignedIn && subscription === 'free' ? 'selected' : 'button'}`} onClick={()=>{
+             if(isLoaded && !isSignedIn){
+              navigate('/login');
+            }
+            handleFreePlan();
+          }}>{isSignedIn && subscription === 'free' ? 'Plan Seçildi!' : 'Planı Seç!'}</button>
           <Modal
             opened={opened}
             onClose={close}
@@ -225,7 +291,12 @@ const Subscriptions = () => {
             {isSignedIn && subscription === 'plus' && <button>Reklam İzle</button>}
             {isSignedIn && subscription === 'plus' && <button onClick={open}>Çark Çevir</button>}
           </div>
-          <button disabled={isSignedIn && subscription === 'plus'} className={`${isSignedIn && subscription === 'plus' ? 'selected' : 'button'}`}>{isSignedIn && subscription === 'plus' ? 'Plan Seçildi!' : 'Planı Seç!'}</button>
+          <button ref={plusButton} disabled={isSignedIn && subscription === 'plus'} className={`${isSignedIn && subscription === 'plus' ? 'selected' : 'button'}`} onClick={()=>{
+             if(isLoaded && !isSignedIn){
+              navigate('/login');
+            }
+            handlePlusPlan();
+          }}>{isSignedIn && subscription === 'plus' ? 'Plan Seçildi!' : 'Planı Seç!'}</button>
         </div>
         <div className="plan3">
           <h3>AI-Strolog Premium</h3>
@@ -241,7 +312,12 @@ const Subscriptions = () => {
             {isSignedIn && subscription === 'premium' && <button>Çekilişe Katıl</button>}
             {isSignedIn && subscription === 'premium' && <button onClick={open}>Çark Çevir</button>}
           </div>
-          <button disabled={isSignedIn && subscription === 'premium'} className={`${isSignedIn && subscription === 'premium' ? 'selected' : 'button'}`}>{isSignedIn && subscription === 'premium' ? 'Plan Seçildi!' : 'Planı Seç!'}</button>
+          <button ref={premiumButton} disabled={isSignedIn && subscription === 'premium'} className={`${isSignedIn && subscription === 'premium' ? 'selected' : 'button'}`} onClick={()=>{
+             if(isLoaded && !isSignedIn){
+              navigate('/login');
+            }
+            handlePremiumPlan();
+          }}>{isSignedIn && subscription === 'premium' ? 'Plan Seçildi!' : 'Planı Seç!'}</button>
         </div>
       </div>
     </div>

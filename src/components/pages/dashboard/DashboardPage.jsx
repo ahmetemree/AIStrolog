@@ -8,6 +8,7 @@ import AiPreview from '../../aipreview/AiPreview';
 import { motion } from 'framer-motion';
 import { useMyContext } from '../../../context/Context';
 import { useRedirectContext } from '../../../context/RedirectContext';
+import { notifications } from '@mantine/notifications';
 
 const DashboardPage = () => {
   const { eSelected, setESelected } = useMyContext();
@@ -86,7 +87,17 @@ const DashboardPage = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      const date = new Date(data.birthDate);
+      const formattedDate = date.toLocaleDateString('tr-TR');
+      if(formattedDate=="Invalid Date"){
+        notifications.show({
+          title: 'Hata',
+          message: 'Doğum tarihinizi giriniz!',
+          color: 'red',
+          position: 'top-right'
+        });
+        navigate('/user-informations');
+      }
       setZodiacSign(data.zodiacSign);
     } catch (error) {
       console.log(error);

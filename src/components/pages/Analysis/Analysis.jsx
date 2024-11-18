@@ -1,18 +1,26 @@
+import { useNavigate } from 'react-router-dom';
 import './analysis.scss';
+import { useAuth } from '@clerk/clerk-react';
+import { useEffect } from 'react';
 
 const Analysis = () => {
-  const messages = [
-    { text: "Mesaj 1", positive: 80 },
-    { text: "Mesaj 2", positive: 60 },
-    { text: "Mesaj 3", positive: 40 },
-    { text: "Mesaj 4", positive: 20 },
-    { text: "Mesaj 5", positive: 10 },
-  ];
+  
+
+  const {isLoaded, isSignedIn} = useAuth();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if(isLoaded && !isSignedIn){
+      navigate('/login');
+    }
+  },[isLoaded,isSignedIn]);
 
   return (
     <div className='analysissss'>
       <div className='left-div'>
         left
+        
       </div>
       <div className='right-div'>
        right

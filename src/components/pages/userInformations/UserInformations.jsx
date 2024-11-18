@@ -16,6 +16,8 @@ const UserInformations = () => {
   const [birthdate, setBirthdate] = useState('');
   const [birthtime, setBirthtime] = useState('');
   const [isFirstTime, setIsFirstTime] = useState(true);
+  const [birthPlace, setBirthPlace] = useState('');
+  const birthPlaceRef = useRef(null);
   let zodiacSign = '';
 
   const handleSubmit = async e => {
@@ -121,6 +123,7 @@ const UserInformations = () => {
       setBirthdate(birthDate.toISOString().split('T')[0]);
       setIsFirstTime(data.isFirstTime);
       setBirthtime(data.birthTime);
+      setBirthPlace(data.birthPlace);
     } catch (error) {
       console.log(error);
     }
@@ -143,10 +146,16 @@ const UserInformations = () => {
             birthTime: birthtimeRef.current.value,
             email: user.emailAddresses[0].emailAddress,
             zodiacSign: zodiacSign,
-            subscription: 'free'
+            subscription: 'free',
+            birthPlace: birthPlaceRef.current.value
           })
         }
       );
+      const data = await response.json();
+      localStorage.setItem('name', nameRef.current.value);
+      localStorage.setItem('birthDate', birthdateRef.current.value);
+      localStorage.setItem('birthTime', birthtimeRef.current.value);
+      localStorage.setItem('birthPlace', birthPlaceRef.current.value);
       return response
       
     } catch (error) {
@@ -186,6 +195,12 @@ const UserInformations = () => {
             placeholder="Doğum saatinizi giriniz"
             ref={birthtimeRef}
             defaultValue={isFirstTime ? '' : birthtime}
+          />
+          <input
+            type="text"
+            placeholder="Doğum yerinizi giriniz"
+            ref={birthPlaceRef}
+            defaultValue={isFirstTime ? '' : birthPlace}
           />
           <button type="submit" onClick={handleSubmit}>
             Onayla!

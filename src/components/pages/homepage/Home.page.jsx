@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 export function HomePage() {
 
   const { eSelected, setESelected } = useMyContext();
-
+  
   return (
     <div className="homepage">
       <div className="imgcontainer">
