@@ -150,8 +150,8 @@ const Subscriptions = () => {
     });
   }
 
-  const updateUserCredits = async (credits) => {
-    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updateCredits`, {
+  const addUserCredits = async (credits) => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/addcredits`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -253,7 +253,7 @@ const Subscriptions = () => {
               onStopSpinning={() => {
                 setFinished(true);
                 setStartingOption(prizeNumber);
-                updateUserCredits(prizeNumber === 0 ? 3 : prizeNumber === 1 ? 5 : 0);
+                addUserCredits(prizeNumber === 0 ? 3 : prizeNumber === 1 ? 5 : 0);
                 setTimeout(() => {
                   setMustSpin(false);
                 }, 1000);
