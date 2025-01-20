@@ -5,9 +5,9 @@
     background-color: rgb(13, 13, 56);
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start; // değiştirildi: center'dan flex-start'a
+    justify-content: flex-start;
     
-    overflow-y: auto; // eklendi: içerik taşarsa kaydırma çubuğu ekler
+    overflow-y: auto; 
     border-radius: 20px;
     flex-direction: column;
     overflow: hidden;
@@ -68,9 +68,9 @@
             color: white;
             font-size: 14px;
             text-align: right;
-            // overflow: hidden;
-            padding-right: 20px; // eklendi: üstten biraz boşluk bırakmak için
-    padding-left: 20px; // eklendi: üstten biraz boşluk bırakmak için
+           
+            padding-right: 20px; 
+    padding-left: 20px;
     margin-top: 10px;
     @media screen and (max-width: 615px) {
         font-size: 9px;

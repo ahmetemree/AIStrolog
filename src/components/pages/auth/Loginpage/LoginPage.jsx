@@ -10,12 +10,12 @@ const LoginPage = () => {
          <SignIn 
            path="/login" 
            signUpUrl='/signup'
-           redirectUrl='/signup'  // Hesap bulunamadığında signup sayfasına yönlendirir
+           redirectUrl='/signup' 
            forceRedirectUrl={`/${redirect}`} 
            appearance={{}}
            afterOAuthSignInUrl={`/${redirect}`}
            routing="path"
-           // signUpMode özelliğini kaldırıyoruz çünkü redirectUrl ile yönetiyoruz
+           
          />
     </div>
   )

@@ -112,7 +112,7 @@ const DashboardPage = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/getchats`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/getchats`,
         {
           method: 'GET',
           headers: {
@@ -145,7 +145,7 @@ const DashboardPage = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/getchat/${chatId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/getchat/${chatId}`,
         {
           method: 'POST',
           headers: {

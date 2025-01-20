@@ -9,7 +9,6 @@ import './style.scss';
 import { ClerkProvider, GoogleOneTap } from '@clerk/clerk-react';
 import { shadesOfPurple } from '@clerk/themes';
 import { MantineProvider } from '@mantine/core';
-// Mantine CSS'ini import et
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { MyContextProvider } from './context/Context';

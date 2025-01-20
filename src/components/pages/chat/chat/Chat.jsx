@@ -275,7 +275,7 @@ const Chat = () => {
   const updateChat = async (role, parts, generatedchatId) => {
     await refreshToken();
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/updatechat/${generatedchatId}`,
+      `${import.meta.env.VITE_BACKEND_URL}/chat/updatechat/${generatedchatId}`,
       {
         method: 'PUT',
         headers: {
@@ -304,7 +304,7 @@ const Chat = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/createchat`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/createchat`,
         {
           method: 'POST',
           headers: {
@@ -341,7 +341,7 @@ const Chat = () => {
   const getChatHistory = async generatedchatId => {
     refreshToken();
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/getchat/${generatedchatId}`,
+      `${import.meta.env.VITE_BACKEND_URL}/chat/getchat/${generatedchatId}`,
       {
         method: 'POST',
         headers: {
@@ -360,7 +360,7 @@ const Chat = () => {
   const handleDeleteChat = async chatId => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/deletechat/${chatId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/deletechat/${chatId}`,
         {
           method: 'DELETE',
           headers: {
@@ -402,14 +402,15 @@ const Chat = () => {
     refreshToken();
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/getchats`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/getchats`,
         {
           method: 'GET',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          credentials: 'include'
+          
         }
       );
 

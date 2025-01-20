@@ -11,6 +11,8 @@ import Subscriptions from './components/pages/subscriptions/Subscriptions.jsx';
 import Contact from './components/pages/contact/Contact.jsx';
 import RedirectSignupPage from './components/pages/redirect_sign_up_page/redirect_signup_page.jsx';
 import UserInformations from './components/pages/userInformations/UserInformations.jsx';
+import Construction from './components/pages/constructionPage/Construction.jsx';
+import UnknownPage from './components/pages/unknownPage/unknownPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -47,7 +49,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/analysis',
-        element: <Analysis />,
+        element: <Construction />,
       },
       {
         path: '/subscriptions',
@@ -61,6 +63,10 @@ const router = createBrowserRouter([
         path: '/user-informations',
         element: <UserInformations />,
       },
+      {
+        path: '*',
+        element: <UnknownPage />
+      }
     ]
   }
 ]);

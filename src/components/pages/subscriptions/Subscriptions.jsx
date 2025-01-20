@@ -149,6 +149,19 @@ const Subscriptions = () => {
       body: JSON.stringify({ canWeeklySpin: false })
     });
   }
+
+  const updateUserCredits = async (credits) => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updateCredits`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ credits: credits })
+    });
+  }
+
+
   const handleSpinClick = () => {
     getUserInformations(token);
     if(!canWeeklySpin){
@@ -240,6 +253,7 @@ const Subscriptions = () => {
               onStopSpinning={() => {
                 setFinished(true);
                 setStartingOption(prizeNumber);
+                updateUserCredits(prizeNumber === 0 ? 3 : prizeNumber === 1 ? 5 : 0);
                 setTimeout(() => {
                   setMustSpin(false);
                 }, 1000);
