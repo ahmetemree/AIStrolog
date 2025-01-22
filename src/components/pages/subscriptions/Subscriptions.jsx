@@ -91,10 +91,12 @@ const Subscriptions = () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ subscription: 'free' })
+      body: JSON.stringify({ subscription: 'free', credits: 12 })
     });
     getUserInformations(token);
   }
+
+
   const handlePlusPlan = async () => {
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatePlan`, {
       method: 'POST',
@@ -102,7 +104,7 @@ const Subscriptions = () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ subscription: 'plus', subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() })
+      body: JSON.stringify({ subscription: 'plus', subscriptionStartDate: new Date().toISOString(), subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(), credits: 200 })
     });
     getUserInformations(token);
   }
@@ -113,7 +115,7 @@ const Subscriptions = () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ subscription: 'premium', subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() })
+      body: JSON.stringify({ subscription: 'premium', subscriptionStartDate: new Date().toISOString(), subscriptionEndDate: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(), credits: 999999 })
     });
     getUserInformations(token);
   }

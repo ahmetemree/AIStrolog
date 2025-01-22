@@ -3,7 +3,9 @@ import "./signuppage.scss"
 const SignupPage = () => {
   return (
     <div className='signuppage'>
-        <SignUp path="/signup" signInUrl='/login' redirectUrl='/user-informations'/>
+        <SignUp 
+        path="/signup"
+           signInUrl='/login' redirectUrl='/user-informations'/>
     </div>
   )
 }

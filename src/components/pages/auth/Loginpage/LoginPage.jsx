@@ -15,7 +15,8 @@ const LoginPage = () => {
            appearance={{}}
            afterOAuthSignInUrl={`/${redirect}`}
            routing="path"
-           
+           afterSignUpUrl="/user-informations"
+           signUpMode="modal"
          />
     </div>
   )

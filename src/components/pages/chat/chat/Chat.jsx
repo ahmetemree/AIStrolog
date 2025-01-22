@@ -30,15 +30,14 @@ const Chat = () => {
   const [answer, setAnswer] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [firstMessage, setFirstMessage] = useState(true);
-  const answerRef = useRef(null);
   const [handleAnswer, setHandleAnswer] = useState(false);
   const [stop, setStop] = useState(false);
   const [credits, setCredits] = useState(0);
   const [birthDay, setBirthDay] = useState('');
   const [birthTime, setBirthTime] = useState('');
+  const [birthPlace, setBirthPlace] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const [isQuestionRelated, setIsQuestionRelated] = useState(true);
   const [token, setUserToken] = useState('');
 
   const refreshToken = async () => {
@@ -68,6 +67,8 @@ const Chat = () => {
       const formattedDate = date.toLocaleDateString('tr-TR');
       setBirthDay(formattedDate);
       setBirthTime(data.birthTime);
+      setBirthPlace(data.birthPlace);
+      
       if (formattedDate == 'Invalid Date') {
         notifications.show({
           title: 'Hata',
@@ -97,19 +98,34 @@ const Chat = () => {
   useEffect(() => {}, [chatHistory, answer]);
 
   const chat = model.startChat({
-    history:
-      chatHistory.length > 0
-        ? chatHistory.map(({ role, parts }) => ({
-            role,
-            parts:
-              parts?.length > 0 && parts[0]?.text
-                ? [{ text: parts[0].text }]
-                : []
-          }))
-        : [],
+    history: chatHistory.length > 0
+      ? chatHistory.map(({ role, parts }) => ({
+          role,
+          parts: parts?.length > 0 && parts[0]?.text ? [{ text: parts[0].text }] : []
+        }))
+      : [],
     generationConfig: {
       //  maxOutputTokens:100,
-    }
+    },
+    safetySettings: [
+      {
+        category: "HARM_CATEGORY_HARASSMENT",
+        threshold: "BLOCK_NONE",
+      },
+    ],
+    // Context bilgisini mesaj olarak gönderelim
+    history: [
+      {
+        role: "user",
+        parts: [{ 
+          text: `Kullanıcı Bilgileri:
+          İsim: ${user?.fullName}
+          Doğum Tarihi: ${birthDay}
+          Doğum Saati: ${birthTime}
+          Doğum Yeri: ${birthPlace}`
+        }]
+      }
+    ]
   });
   const chat2 = model2.startChat({
     generationConfig: {
