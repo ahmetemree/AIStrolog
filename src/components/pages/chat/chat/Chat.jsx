@@ -36,6 +36,7 @@ const Chat = () => {
   const [birthDay, setBirthDay] = useState('');
   const [birthTime, setBirthTime] = useState('');
   const [birthPlace, setBirthPlace] = useState('');
+  const [subscription, setSubscription] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const [token, setUserToken] = useState('');
@@ -68,7 +69,7 @@ const Chat = () => {
       setBirthDay(formattedDate);
       setBirthTime(data.birthTime);
       setBirthPlace(data.birthPlace);
-      
+      setSubscription(data.subscription);
       if (formattedDate == 'Invalid Date') {
         notifications.show({
           title: 'Hata',
@@ -219,7 +220,11 @@ const Chat = () => {
   };
 
   const decreaseCredits = async () => {
+
     await refreshToken();
+    if(subscription === 'premium'){
+      return;
+    }
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/user/updatecredits`,
       {
@@ -536,7 +541,7 @@ const Chat = () => {
       </div>
       <div className="messagecontainer">
         <div className="credits">
-          <span>Kredi: {credits} Kredi kaldı!</span>
+          <span>{subscription === 'premium' ? 'Sınırsız Kredi Hakkı!' : `${credits} Kredi kaldı!`}</span>
         </div>
         <div
           className={

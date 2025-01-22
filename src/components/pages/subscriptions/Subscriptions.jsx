@@ -193,7 +193,7 @@ const Subscriptions = () => {
 
           <div className="list">
             <ul>
-              <li>Haftalık ücretsiz 3 kredi mesaj hakkı</li>
+              <li>Aylık 12 kredi mesaj hakkı</li>
               <li>Her hafta ücretsiz çark çevirme hakkı</li>
               <li>Reklam izleyerek kredi kazanın</li>
               <li>Kredi kullanımı sınırlıdır</li>

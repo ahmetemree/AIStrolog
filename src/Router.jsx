@@ -13,6 +13,8 @@ import RedirectSignupPage from './components/pages/redirect_sign_up_page/redirec
 import UserInformations from './components/pages/userInformations/UserInformations.jsx';
 import Construction from './components/pages/constructionPage/Construction.jsx';
 import UnknownPage from './components/pages/unknownPage/unknownPage.jsx';
+import DistanceAgreement from './components/pages/distanceSalesAgreement/DistanceAgreement.jsx';
+import ServiceAgreement from './components/pages/service-agreement/ServiceAgreement.jsx';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +64,14 @@ const router = createBrowserRouter([
       {
         path: '/user-informations',
         element: <UserInformations />,
+      },
+      {
+        path: '/distance-sales-agreement',
+        element: <DistanceAgreement />,
+      },
+      {
+        path: '/service-agreement',
+        element: <ServiceAgreement />,
       },
       {
         path: '*',

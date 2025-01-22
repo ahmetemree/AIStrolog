@@ -53,13 +53,19 @@ export function HomePage() {
       </div>
         <div className="privacy">
           <Link to={'/privacy-policy'}>
-          
-          <div className="text">{eSelected ? "Privacy & Policy" : "Gizlilik & Güvenlik"}</div>
+          <div className="text">{eSelected ? "Privacy & Policy " : "Gizlilik & Güvenlik "}</div>
           </Link>
-          <div className="text">|</div>
           <Link to={'/contact'}>
-          
           <div className="text">{eSelected ? "Contact" : "İletişim"}</div>
+          </Link>
+          <Link to={'/distance-sales-agreement'}>
+          <div className="text">{eSelected ? "Distance Sales Agreement" : "Mesafeli Satış Sözleşmesi"}</div>
+          </Link>
+          <Link to={'/service-agreement'}>
+          <div className="text">{eSelected ? "Service Agreement" : "Hizmet Sözleşmesi"}</div>
+          </Link>
+          <Link to={'/Terms-of-Use'}>
+          <div className="lasttext">{eSelected ? "Terms of Use" : "Kullanım Şartları"}</div>
           </Link>
         </div>
     </div>

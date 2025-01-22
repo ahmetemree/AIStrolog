@@ -101,6 +101,11 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
+        
+        .text{
+            border-right: 1px solid rgb(145, 144, 144);
+            padding-right: 10px;
+        }
         a{
             text-decoration: none;   
 
