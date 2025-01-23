@@ -1,0 +1,96 @@
+.payment{
+    width: 95%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .payment-container{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        gap: 20px;
+        .leftpart{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50%;
+            height: 50%;
+            .card-container{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .card{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 50%;
+                    height: 50%;
+                    .card-front{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        img{
+                            width: 200%;
+                            height: 200%;
+                            object-fit: contain;
+                            border-radius: 10px;
+                        }
+                    }
+                    .card-back{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        img{
+                            width: 200%;
+                            height: 200%;
+                            object-fit: contain;
+                            border-radius: 10px;
+                        }
+                    }
+                }
+            }
+        }
+        .rightpart{
+            width: 50%;
+            height: 50%;
+            form{
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                input{
+                    width: max-content;
+                    height: 40px;
+                    border: 2px solid #a594fa;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    color: #000000;
+                    font-size: 16px;
+                    padding: 0 10px;
+                    background-color: transparent;
+                }
+
+                button{
+                    width: max-content;
+                    height: 40px;
+                    border: 1px solid #000;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    color: #000;
+                    font-size: 16px;
+                    padding: 0 10px;
+                    background-color: #a594fa;
+                    color: #fff;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

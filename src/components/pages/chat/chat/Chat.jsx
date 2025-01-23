@@ -99,23 +99,8 @@ const Chat = () => {
   useEffect(() => {}, [chatHistory, answer]);
 
   const chat = model.startChat({
-    history: chatHistory.length > 0
-      ? chatHistory.map(({ role, parts }) => ({
-          role,
-          parts: parts?.length > 0 && parts[0]?.text ? [{ text: parts[0].text }] : []
-        }))
-      : [],
-    generationConfig: {
-      //  maxOutputTokens:100,
-    },
-    safetySettings: [
-      {
-        category: "HARM_CATEGORY_HARASSMENT",
-        threshold: "BLOCK_NONE",
-      },
-    ],
-    // Context bilgisini mesaj olarak gönderelim
     history: [
+      // Önce kullanıcı bilgilerini gönder
       {
         role: "user",
         parts: [{ 
@@ -125,7 +110,23 @@ const Chat = () => {
           Doğum Saati: ${birthTime}
           Doğum Yeri: ${birthPlace}`
         }]
-      }
+      },
+      // Sonra mevcut sohbet geçmişini ekle
+      ...(chatHistory.length > 0
+        ? chatHistory.map(({ role, parts }) => ({
+            role,
+            parts: parts?.length > 0 && parts[0]?.text ? [{ text: parts[0].text }] : []
+          }))
+        : [])
+    ],
+    generationConfig: {
+      //  maxOutputTokens:100,
+    },
+    safetySettings: [
+      {
+        category: "HARM_CATEGORY_HARASSMENT",
+        threshold: "BLOCK_NONE",
+      },
     ]
   });
   const chat2 = model2.startChat({

@@ -15,6 +15,7 @@ import Construction from './components/pages/constructionPage/Construction.jsx';
 import UnknownPage from './components/pages/unknownPage/unknownPage.jsx';
 import DistanceAgreement from './components/pages/distanceSalesAgreement/DistanceAgreement.jsx';
 import ServiceAgreement from './components/pages/service-agreement/ServiceAgreement.jsx';
+import Payment from './components/pages/payment/Payment.jsx';
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: '/service-agreement',
         element: <ServiceAgreement />,
+      },
+      {
+        path: '/payment',
+        element: <Payment />,
       },
       {
         path: '*',

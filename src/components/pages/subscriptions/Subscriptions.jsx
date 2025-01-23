@@ -98,6 +98,7 @@ const Subscriptions = () => {
 
 
   const handlePlusPlan = async () => {
+    navigate('/payment');
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatePlan`, {
       method: 'POST',
       headers: {
@@ -109,6 +110,7 @@ const Subscriptions = () => {
     getUserInformations(token);
   }
   const handlePremiumPlan = async () => {
+    navigate('/payment');
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/updatePlan`, {
       method: 'POST',
       headers: {
