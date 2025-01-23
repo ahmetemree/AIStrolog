@@ -1,25 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './payment.scss';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const CardContainer = styled.div`
   perspective: 1000px;
-  width: 100%;
-  height: 200px;
+  width: 100px;
+  height: 100px;
 `;
 
 const Card = styled(motion.div)`
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 100px;
+  height: 100px;
   transform-style: preserve-3d;
 `;
 
 const CardSide = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 100px;
+  height: 100px;
   backface-visibility: hidden;
   border-radius: 10px;
 `;
@@ -28,11 +28,16 @@ const CardFront = styled(CardSide)`
 `;
 
 const CardBack = styled(CardSide)`
-  transform: rotateY(180deg);
+transform: rotateY(180deg);
 `;
 
 const Payment = () => {
+    const [plan, setPlan] = useState('premium');
     const [flipped, setFlipped] = useState(false);
+
+    useEffect(() => {
+        setPlan(new URLSearchParams(window.location.search).get('plan'));
+    }, []);
   return (
     <div className='payment'>
       <div className='payment-container'>
@@ -52,8 +57,10 @@ const Payment = () => {
             </CardBack>
           </Card>
         </CardContainer>
+       
        </div>
        <div className="rightpart">
+        <h1>{plan === 'premium' ? 'Premium Plan için ödeme yapıyorsunuz' : 'Plus Plan için ödeme yapıyorsunuz'}</h1>
         <form>
             <input 
               type="text" 
@@ -108,6 +115,16 @@ const Payment = () => {
               }}
             />
             <button type='submit'>Ödeme Yap</button>
+            <div className="paymentmethods">
+            <div className="paymentmethod">
+                <img src="mastercard.png" alt="" />
+                <img src="visa.png" alt="" />
+                <img src="troy.png" alt="" />
+            </div>
+        </div>
+            <div className="payment-info">
+                <p>Ödeme bilgileri güvenli bir şekilde işlenmektedir.</p>
+            </div>
         </form>
        </div>
       </div>

@@ -75,7 +75,7 @@ const router = createBrowserRouter([
         element: <ServiceAgreement />,
       },
       {
-        path: '/payment',
+        path: '/payment/:subscription?',
         element: <Payment />,
       },
       {

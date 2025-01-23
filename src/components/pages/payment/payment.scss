@@ -17,8 +17,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 50px;
             width: 50%;
             height: 50%;
+            flex-direction: column;
+            
             .card-container{
                 display: flex;
                 align-items: center;
@@ -34,8 +37,8 @@
                         align-items: center;
                         justify-content: center;
                         img{
-                            width: 200%;
-                            height: 200%;
+                            width: 500px;
+                            height: 300px;
                             object-fit: contain;
                             border-radius: 10px;
                         }
@@ -45,18 +48,47 @@
                         align-items: center;
                         justify-content: center;
                         img{
-                            width: 200%;
-                            height: 200%;
+                            width: 500px;
+                            height: 270px;
                             object-fit: contain;
                             border-radius: 10px;
                         }
                     }
                 }
             }
+            .paymentmethods{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                .paymentmethod{
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 20px;
+                    img{
+                        width: 50px;
+                        height: 50px;
+                        object-fit: contain;
+                    }
+                }
+            }
         }
         .rightpart{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
             width: 50%;
-            height: 50%;
+            height: 80%;
+            background-color: #a594fa;
+            padding: 20px;
+            border-radius: 10px;
+            gap: 10px;
+            h1{
+                font-size: 20px;
+                color: #fff;
+            }
             form{
                 width: 100%;
                 height: 100%;
@@ -66,29 +98,59 @@
                 justify-content: center;
                 gap: 10px;
                 input{
-                    width: max-content;
+                    width: 50%;
                     height: 40px;
-                    border: 2px solid #a594fa;
+                    border: 2px solid #ffffff;
                     border-radius: 5px;
                     margin-bottom: 10px;
                     color: #000000;
                     font-size: 16px;
                     padding: 0 10px;
-                    background-color: transparent;
+                    background-color: white;
                 }
 
                 button{
                     width: max-content;
                     height: 40px;
-                    border: 1px solid #000;
                     border-radius: 5px;
                     margin-bottom: 10px;
                     color: #000;
                     font-size: 16px;
                     padding: 0 10px;
-                    background-color: #a594fa;
-                    color: #fff;
+                    background-color: #fff;
+                    color: #a594fa;
                     font-weight: bold;
+                    outline: none;
+                    border: none;
+                }
+                .payment-info{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    p{
+                        color: #fff;
+                    }
+                }
+                .paymentmethods{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    .paymentmethod{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 20px;
+                        img{
+                            width: 50px;
+                            height: 50px;
+                            object-fit: contain;
+                            background-color: #fff;
+                            border-radius: 5px;
+                            padding-right: 10px;
+                            padding-left: 10px;
+                        }
+                    }
                 }
             }
         }
