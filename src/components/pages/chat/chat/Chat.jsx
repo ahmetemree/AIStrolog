@@ -31,7 +31,7 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [firstMessage, setFirstMessage] = useState(true);
   const [handleAnswer, setHandleAnswer] = useState(false);
-  const [stop, setStop] = useState(false);
+  const stopRef = useRef(false);
   const [credits, setCredits] = useState(0);
   const [birthDay, setBirthDay] = useState('');
   const [birthTime, setBirthTime] = useState('');
@@ -143,11 +143,38 @@ const Chat = () => {
     setChatId('');
   };
 
+  const animateText = async (lines, displayedAnswer = '') => {
+    debugger
+    for (let line of lines) {
+      if (!stopRef.current) {
+        for (let char of line) {
+          if (stopRef.current) break;
+          console.log('stop',stopRef.current);
+          
+          refreshToken();
+          displayedAnswer += char;
+          setAnswer(displayedAnswer);
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+        
+        if (stopRef.current) break;
+        
+        displayedAnswer += '\n';
+        setAnswer(displayedAnswer);
+
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+    return displayedAnswer;
+  };
+
   const add = async (text, isInitial, generatedchatId) => {
-    debugger;
     refreshToken();
     setHandleAnswer(true);
-
     let currentChatId = '';
     if (firstMessage && generatedchatId != '') {
       currentChatId = generatedchatId;
@@ -182,30 +209,11 @@ const Chat = () => {
 
       const response = result;
       const formattedResponse = response.replace(/\*\*(.*?)\*\*/g, '\n$1\n');
-
-      let displayedAnswer = '';
       const lines = formattedResponse.split('\n');
-
       setIsTyping(true);
-      for (let line of lines) {
-        if (!stop) {
-          for (let char of line) {
-            refreshToken();
-            displayedAnswer += char;
-            setAnswer(displayedAnswer);
-            await new Promise(resolve => setTimeout(resolve, 20));
-          }
-          displayedAnswer += '\n';
-          setAnswer(displayedAnswer);
+      const displayedAnswer = await animateText(lines, '');
 
-          if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-          }
 
-          await new Promise(resolve => setTimeout(resolve, 100)); // Satır sonu beklemesi
-        }
-      }
-      refreshToken();
       setIsTyping(false);
       await refreshToken();
       await updateChat('model', [{ text: displayedAnswer }], currentChatId);
@@ -239,12 +247,23 @@ const Chat = () => {
     );
   };
 
+  useEffect(() => {
+    console.log("stop",stopRef.current);
+    
+  }, [stopRef.current]);
+
   const handleSendMessage = async () => {
+    console.log("loading",loading);
+    if(loading){
+      stopRef.current = true;
+      return;
+    }
+    stopRef.current = false;
     getUserInformations(token);
-    debugger
     if (credits > 0) {
       decreaseCredits();
       getUserInformations(token);
+      
     }
     refreshToken();
     // Mesaj gönderildikten sonra en aşağıya kaydırma
@@ -594,13 +613,14 @@ const Chat = () => {
               }}
             />
             <button
+            className= {loading ? 'stopbutton' : 'sendbutton'}
               onClick={() => {
                 handleSendMessage();
+                stopRef.current = true;
               }}
               ref={buttonRef}
-              disabled={loading}
             >
-              {loading ? 'Gönderiliyor...' : 'Gönder'}
+              {loading ? 'Durdur' : 'Gönder'}
             </button>
           </div>
         </div>

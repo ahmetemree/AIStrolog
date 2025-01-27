@@ -107,6 +107,14 @@
                     font-size: 16px;
                     padding: 0 10px;
                     background-color: white;
+                    outline: none;
+                    transition: all 0.3s ease;
+                    &:focus {
+                        border-color: #60549b;
+                        border-width: 2px;
+                        transform: scale(1.02);
+                        transition: all 0.3s ease;
+                    }
                 }
 
                 button{
@@ -122,6 +130,12 @@
                     font-weight: bold;
                     outline: none;
                     border: none;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    &:hover {
+                        transform: scale(1.05);
+                        transition: all 0.3s ease;
+                    }
                 }
                 .payment-info{
                     display: flex;

@@ -36,8 +36,8 @@ const Payment = () => {
     const [flipped, setFlipped] = useState(false);
 
     useEffect(() => {
-        setPlan(new URLSearchParams(window.location.search).get('plan'));
-    }, []);
+        setPlan(new URLSearchParams(window.location.search).get('subscription'));
+    }, [plan]);
   return (
     <div className='payment'>
       <div className='payment-container'>
