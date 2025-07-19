@@ -18,7 +18,7 @@ const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_PUBLIC_KEY);
 
 
 
-const model = genAI.getGenerativeModel({ model: "tunedModels/aistrolog-a1papf5qlakx", safetySettings});
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro", safetySettings});
 const model2 = genAI.getGenerativeModel({ model: "gemini-1.0-pro", safetySettings,});
 
 export { model, model2 };

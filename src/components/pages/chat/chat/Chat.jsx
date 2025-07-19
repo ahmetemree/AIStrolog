@@ -108,12 +108,13 @@ const Chat = () => {
           İsim: ${user?.fullName}
           Doğum Tarihi: ${birthDay}
           Doğum Saati: ${birthTime}
-          Doğum Yeri: ${birthPlace}`
+          Doğum Yeri: ${birthPlace}
+          Uygulamanın Amacı: "Verilen bilgilere göre burç analizi yapmaktır. Burç analizi dışında herhangi bir şey cevaplamamalısın."`
         }]
       },
       // Sonra mevcut sohbet geçmişini ekle
-      ...(chatHistory.length > 0
-        ? chatHistory.map(({ role, parts }) => ({
+      ...(chatHistory?.length > 0
+        ? chatHistory?.map(({ role, parts }) => ({
             role,
             parts: parts?.length > 0 && parts[0]?.text ? [{ text: parts[0].text }] : []
           }))
@@ -144,7 +145,6 @@ const Chat = () => {
   };
 
   const animateText = async (lines, displayedAnswer = '') => {
-    debugger
     for (let line of lines) {
       if (!stopRef.current) {
         for (let char of line) {
@@ -528,7 +528,7 @@ const Chat = () => {
         {chats.length === 0 ? (
           <div className="loading">Yükleniyor...</div>
         ) : (
-          chats.map(chat => (
+          chats?.map(chat => (
             <div
               key={chat.chats._id}
               className="chatwrapper"
@@ -570,7 +570,7 @@ const Chat = () => {
         >
           {isMessageExist ? (
             <>
-              {chatHistory.map((message, index) => (
+              {chatHistory?.map((message, index) => (
                 <div
                   key={index}
                   className={

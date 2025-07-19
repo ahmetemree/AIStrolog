@@ -16,6 +16,7 @@ import UnknownPage from './components/pages/unknownPage/unknownPage.jsx';
 import DistanceAgreement from './components/pages/distanceSalesAgreement/DistanceAgreement.jsx';
 import ServiceAgreement from './components/pages/service-agreement/ServiceAgreement.jsx';
 import Payment from './components/pages/payment/Payment.jsx';
+import TermsOfUse from './components/pages/termsOfUse/TermsOfUse.jsx';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: '/payment/:subscription?',
         element: <Payment />,
+      },
+      {
+        path: '/terms-of-use',
+        element: <TermsOfUse />,
       },
       {
         path: '*',
